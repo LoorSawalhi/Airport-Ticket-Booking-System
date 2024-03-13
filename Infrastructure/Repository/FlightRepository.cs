@@ -8,7 +8,7 @@ namespace Infrastructre.Repository;
 
 public class FlightRepository : IFlightRepository
 {
-    private string _fileName;
+    private readonly string _fileName;
 
     public FlightRepository(string fileName)
     {
@@ -21,12 +21,10 @@ public class FlightRepository : IFlightRepository
         {
             HasHeaderRecord = false, // Set to false if the file does not have headers
         };
-        using (var reader = new StreamReader("/home/loor/Desktop/Foothill Training/C#/AirportTicketBookingSystem/Infrastructure/flights.csv"))
-        using (var csv = new CsvReader(reader, config))
-        {
-            var records = csv.GetRecords<Flight>();
-            return records.ToList();
-        }
+        using var reader = new StreamReader(_fileName);
+        using var csv = new CsvReader(reader, config);
+        var records = csv.GetRecords<Flight>();
+        return records.ToList();
     }
 
     public Flight FindById(string id)

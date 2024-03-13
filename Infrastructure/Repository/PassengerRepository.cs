@@ -1,20 +1,23 @@
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Domain.Models;
 using Domain.Repository;
 
 namespace Infrastructre.Repository;
 
-public class PassengerRepository : IPassengerRepository
+public sealed class PassengerRepository(string fileName) : IPassengerRepository
 {
-    private string _fileName;
-
-    public PassengerRepository(string fileName)
-    {
-        _fileName = fileName;
-    }
-
     public IEnumerable<Passenger> GetAllPassengers()
     {
-        throw new NotImplementedException();
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = false,
+        };
+        using var reader = new StreamReader(fileName);
+        using var csv = new CsvReader(reader, config);
+        var records = csv.GetRecords<Passenger>();
+        return records.ToList();
     }
 
     public Passenger FindById(string id)

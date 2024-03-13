@@ -1,11 +1,6 @@
 ﻿using Domain.Models;
 using Domain.Repository;
 using Infrastructre.Repository;
+using UserInterface;
 
-FlightRepository flightRepository = new FlightRepository("");
-
-IEnumerable<Flight> flights = flightRepository.GetAllFlights();
-foreach (var flight in flights)
-{
-    Console.WriteLine(flight);
-}
+Utilities.Menu();
