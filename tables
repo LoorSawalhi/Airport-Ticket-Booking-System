@@ -1,0 +1,29 @@
+flight table => 
+	id
+	depature date
+	depature airport id
+	arrival airport id
+	
+	
+class =>
+	id
+	price	
+	name
+	
+airport =>
+	id
+	airport nameI
+	country
+	
+
+booking =>
+	flight id
+	passenger id
+	
+passenger =>
+	id
+	name
+	age
+	country
+	bookings
+

@@ -8,8 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Domain\FlightManagement\" />
-      <Folder Include="Domain\PassengerManagement\" />
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
+    
+    
 
 </Project>
