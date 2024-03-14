@@ -9,31 +9,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a51be3f-8457-42ea-96f9-d51013bc8298" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Domain/Domain.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Models/Airport.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Models/Booking.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Models/Flight.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Models/FlightClass.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Models/Passenger.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Repository/IAirportRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Repository/IBookingRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Repository/IClassRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Repository/IFlightRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Repository/IPassengerRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/Infrastructure.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/Repository/AirportRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/Repository/BookingRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/Repository/ClassRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/Repository/FlightRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/Repository/PassengerRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/airports.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/classes.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/flights.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Infrastructure/passengers.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserInterface/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserInterface/UserInterface.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AirportTicketBookingSystem.sln" beforeDir="false" afterPath="$PROJECT_DIR$/AirportTicketBookingSystem.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AirportTicketBookingSystem/AirportTicketBookingSystem.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/AirportTicketBookingSystem/AirportTicketBookingSystem.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UserInterface/Service/BookingService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UserInterface/Service/FlightServices.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AirportTicketBookingSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AirportTicketBookingSystem/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Models/Flight.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Models/Flight.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Models/FlightClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Models/FlightClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Models/Passenger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Models/Passenger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Repository/IFlightRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Repository/IFlightRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Repository/IPassengerRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Repository/IPassengerRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Service/PassengerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserInterface/Service/PassengerService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Repository/FlightRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Repository/FlightRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Repository/PassengerRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Repository/PassengerRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/airports.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/airports.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/classes.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/classes.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/passengers.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/passengers.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserInterface/Passenger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserInterface/Passenger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserInterface/Utilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserInterface/Utilities.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,28 +49,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.AirportTicketBookingSystem.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "SpellingScopeSettingsId",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.AirportTicketBookingSystem.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;SpellingScopeSettingsId&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "/home/loor/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache",
-      "/home/loor/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache",
-      "/home/loor/.local/share/Symbols/src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/home/loor/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
+      &quot;/home/loor/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
+      &quot;/home/loor/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Project.AirportTicketBookingSystem">
     <configuration name="AirportTicketBookingSystem" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/UserInterface/bin/Debug/net8.0/UserInterface" />
@@ -131,7 +122,8 @@
       <workItem from="1710239327267" duration="3385000" />
       <workItem from="1710268822703" duration="699000" />
       <workItem from="1710269819479" duration="317000" />
-      <workItem from="1710316859451" duration="8553000" />
+      <workItem from="1710316859451" duration="14958000" />
+      <workItem from="1710399311406" duration="3920000" />
     </task>
     <servers />
   </component>

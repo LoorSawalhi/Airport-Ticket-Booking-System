@@ -1,4 +1,3 @@
-id,price,name
-1,110,Economy
-2,293,Business
-3,358,First Class
+1,110,Economy, 100
+2,293,Business, 50
+3,358,First Class, 20

@@ -6,6 +6,16 @@ public class Flight(string id, DateTime departureDate, string departureAirport, 
     private DateTime _departureDate = departureDate;
     private string _departureAirport = departureAirport;
     private string _arrivalAirport = arrivalAirport;
+    public IEnumerable<FlightClass> classes { get; set; }
+
+    public required string id { get; set; }
+
+    public required DateTime departureDate { get; set; }
+
+    public required string departureAirport { get; set; }
+
+    public required string arrivalAirport { get; set; }
+
 
     public override string? ToString()
     {

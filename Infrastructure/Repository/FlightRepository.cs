@@ -15,11 +15,11 @@ public class FlightRepository : IFlightRepository
         _fileName = fileName;
     }
 
-    public IEnumerable<Flight> GetAllFlights()
+    public IEnumerable<Flight?> GetAllFlights()
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            HasHeaderRecord = false, // Set to false if the file does not have headers
+            HasHeaderRecord = false,
         };
         using var reader = new StreamReader(_fileName);
         using var csv = new CsvReader(reader, config);
@@ -27,9 +27,9 @@ public class FlightRepository : IFlightRepository
         return records.ToList();
     }
 
-    public Flight FindById(string id)
+    public Flight? FindById(string id)
     {
-        throw new NotImplementedException();
+        return GetAllFlights().FirstOrDefault(flight => flight?.id == id);
     }
 
     public void Add(Flight flight)
@@ -45,5 +45,10 @@ public class FlightRepository : IFlightRepository
     public Flight Update(Flight newFlight, string id)
     {
         throw new NotImplementedException();
+    }
+
+    public IEnumerable<Flight?> GetFlightByDepartureAirport(string airport)
+    {
+        return GetAllFlights().Where(flight => flight != null && flight.departureAirport.Equals(airport, StringComparison.InvariantCultureIgnoreCase));
     }
 }

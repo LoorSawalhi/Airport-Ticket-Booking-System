@@ -8,7 +8,7 @@ namespace Infrastructre.Repository;
 
 public sealed class PassengerRepository(string fileName) : IPassengerRepository
 {
-    public IEnumerable<Passenger> GetAllPassengers()
+    public IEnumerable<Passenger?> GetAllPassengers()
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
@@ -20,9 +20,9 @@ public sealed class PassengerRepository(string fileName) : IPassengerRepository
         return records.ToList();
     }
 
-    public Passenger FindById(string id)
+    public Passenger? FindById(string id)
     {
-        throw new NotImplementedException();
+        return GetAllPassengers().FirstOrDefault(passenger => passenger?.id == id);
     }
 
     public void Add(Passenger passenger)

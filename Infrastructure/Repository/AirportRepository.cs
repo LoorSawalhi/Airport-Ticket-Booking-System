@@ -1,3 +1,6 @@
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Domain.Models;
 using Domain.Repository;
 
@@ -14,7 +17,14 @@ public class AirportRepository : IAirportRepository
 
     public IEnumerable<Airport> GetAllAirports()
     {
-        throw new NotImplementedException();
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = false,
+        };
+        using var reader = new StreamReader(_fileName);
+        using var csv = new CsvReader(reader, config);
+        var records = csv.GetRecords<Airport>();
+        return records.ToList();
     }
 
     public Airport FindById(string id)
@@ -35,5 +45,10 @@ public class AirportRepository : IAirportRepository
     public Airport Update(Airport newAirport, string id)
     {
         throw new NotImplementedException();
+    }
+
+    public IEnumerable<Airport> GetAirportByCountry(string country)
+    {
+        return GetAllAirports().Where(airport => airport.country.Equals(country, StringComparison.InvariantCultureIgnoreCase));
     }
 }
