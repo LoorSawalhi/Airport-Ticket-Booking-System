@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices.JavaScript;
+using Domain.Models;
 using UserInterface.CustomException;
 
 namespace UserInterface;
@@ -9,7 +11,7 @@ internal class Utilities
 
     public static void Menu()
     {
-        HandleUserOptions<NotValidOptionsException>(() =>
+        HandleUserInput<NotValidOptionsException, VoidResult>(() =>
             {
                 Console.Write("""
                               Welcome to the Airport Booking System
@@ -21,6 +23,7 @@ internal class Utilities
                               """);
                 _inputLine = ReadOption();
                 Options(_inputLine);
+                return new VoidResult();
             });
     }
 
@@ -43,6 +46,7 @@ internal class Utilities
     {
         Console.Write("To exit type e or E => ");
         var e = Console.ReadLine() ?? string.Empty;
+        Console.WriteLine();
         if (e.ToLower().Trim().Equals("e")) return -1;
 
         return 0;
@@ -58,20 +62,32 @@ internal class Utilities
         return option;
     }
 
-    public static void HandleUserOptions<TException>(Action optionAction) where TException : Exception
+    public static T? HandleUserInput<TException, T>(Func<T> optionAction) where TException : Exception
     {
         while (true)
-        {
             try
             {
-                optionAction();
+                return optionAction();
             }
             catch (TException e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine();
                 if (ExitCond() == -1)
                     break;
             }
-        }
+
+        return default(T);
+    }
+
+    public static string ReadString(string message)
+    {
+        Console.Write(message);
+        var readLine = Console.ReadLine();
+        Console.WriteLine();
+        if (readLine == null)
+            throw new EmptyStringException("Empty Input!!");
+
+        return readLine;
     }
 }

@@ -1,20 +1,25 @@
 using Infrastructre.Repository;
+using UserInterface.Controller;
 using UserInterface.CustomException;
 using UserInterface.Service;
+using Domain.Models;
 using static UserInterface.Utilities;
 
 namespace UserInterface;
 
 internal class Passenger
 {
-    public const string InvalidPassenger = "No Available Passenger with This ID";
+    private const string InvalidPassenger = "No Available Passenger with This ID";
     private static int _inputLine;
+    public static AirportServices airportService;
+    public static FlightServices flightService;
+    public static FlightController flightController;
+
 
     public static void Menu()
     {
-        var passengerRepository = new PassengerRepository("/home/loor/Desktop/Foothill Training/C#/AirportTicketBookingSystem/Infrastructure/passengers.csv");
-        var passengerService = new PassengerService(passengerRepository);
-        HandleUserOptions<NoAvailablePassenger>(() =>
+        InitServices(out airportService, out flightService, out var passengerService);
+        HandleUserInput<NoAvailablePassengerException, VoidResult>(() =>
         {
             Console.Write("""
                           You must be a passenger, Welcome!!
@@ -27,20 +32,33 @@ internal class Passenger
             {
                 var passenger = passengerService.FindPassengerById(userId);
                 if (passenger == null)
-                    throw new NoAvailablePassenger(InvalidPassenger);
+                    throw new NoAvailablePassengerException(InvalidPassenger);
 
                 PassengerOptions();
             }
             else
             {
-                throw new NoAvailablePassenger(InvalidPassenger);
+                throw new NoAvailablePassengerException(InvalidPassenger);
             }
+
+            return new VoidResult();
         });
+    }
+
+    private static void InitServices(out AirportServices airportService, out FlightServices flightService, out PassengerService passengerService)
+    {
+        var passengerRepository = new PassengerRepository("/home/loor/Desktop/Foothill Training/C#/AirportTicketBookingSystem/Infrastructure/passengers.csv");
+        passengerService = new PassengerService(passengerRepository);
+        var airportRepository = new AirportRepository("/home/loor/Desktop/Foothill Training/C#/AirportTicketBookingSystem/Infrastructure/airports.csv");
+        var flightRepository = new FlightRepository("/home/loor/Desktop/Foothill Training/C#/AirportTicketBookingSystem/Infrastructure/flights.csv");
+        airportService = new AirportServices(airportRepository);
+        flightService = new FlightServices(flightRepository, airportService);
+        flightController = new FlightController(flightService);
     }
 
     private static void PassengerOptions()
     {
-        HandleUserOptions<NotValidOptionsException>(() =>
+        HandleUserInput<NotValidOptionsException, VoidResult>(() =>
         {
             Console.Write("""
                           Welcome Again !! Here are your options
@@ -56,17 +74,19 @@ internal class Passenger
                           """);
             _inputLine = ReadOption();
             Options(_inputLine);
+            return new VoidResult();
         });
     }
 
     private static void Options(int option)
     {
+        const int bookFlight = 1, searchFlight = 2;
         switch (option)
         {
-            case 1:
-                //Book a Flight
+            case bookFlight:
+                flightController.SearchFlights();
                 break;
-            case 2:
+            case searchFlight:
                 //Search for Flights
                 break;
             case 3:
@@ -84,22 +104,5 @@ internal class Passenger
             default:
                 throw new NotValidOptionsException(InvalidOption);
         }
-    }
-
-    public void BookAFlight()
-    {
-        HandleUserOptions<NotValidOptionsException>(() =>
-        {
-            Console.WriteLine("""
-                              To book a flight, search a flight by:
-                              1) Departure Country
-                              2) Arrival Country
-                              3) Price
-                              4) Departure Airport
-                              5) Arrival Airport
-                              6) Class
-                              """);
-            _inputLine = ReadOption();
-        });
     }
 }

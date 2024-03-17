@@ -10,4 +10,5 @@ public interface IAirportRepository
     public void Delete(Airport airport);
     public Airport Update(Airport newAirport, string id);
     public IEnumerable<Airport> GetAirportByCountry(string country);
+    public IEnumerable<Airport> GetAirportByName(string name);
 }

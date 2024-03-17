@@ -23,4 +23,9 @@ public class Airport
         get => _country;
         set => _country = value ?? throw new ArgumentNullException(nameof(value));
     }
+
+    public override string? ToString()
+    {
+        return $"Airport id = {id}, Country Name = {country}, Airport Name = {name} ";
+    }
 }

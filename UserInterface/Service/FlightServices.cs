@@ -1,17 +1,19 @@
+using System.Net.Http.Headers;
 using Domain.Models;
 using Domain.Repository;
+using UserInterface.CustomException;
 
 namespace UserInterface.Service;
 
 public class FlightServices
 {
     private readonly IFlightRepository _flightRepository;
-    private readonly IAirportRepository _airportRepository;
+    private readonly AirportServices _airportServices;
 
-    public FlightServices(IFlightRepository flightRepository, IAirportRepository airportRepository)
+    public FlightServices(IFlightRepository flightRepository, AirportServices airportServices)
     {
         _flightRepository = flightRepository;
-        _airportRepository = airportRepository;
+        _airportServices = airportServices;
     }
 
     public Flight? FindFlightById(string id)
@@ -19,17 +21,36 @@ public class FlightServices
         return _flightRepository.FindById(id);
     }
 
-    public IEnumerable<Flight?> FindFlightByDepartureCountry(string country)
+    internal IEnumerable<Flight?> FindFlightByDepartureCountry(string country)
     {
-        var airports = _airportRepository.GetAirportByCountry(country);
-        List<Flight> flights = new List<Flight>();
+            var airports = _airportServices.FindAirportByCountry(country).ToList();
 
-        foreach (var airport in airports)
-        {
-            var flight = _flightRepository.GetFlightByDepartureAirport(airport.id);
-            flights.AddRange(flight!);
-        }
+            if (airports.Capacity == 0)
+                throw new EmptyQueryResultException($"No Such Airport in {country}");
 
-        return flights;
+            foreach (var airport in airports)
+            {
+                Console.WriteLine(airport.ToString());
+            }
+
+            return _flightRepository.GetFlightByDepartureAirport(airports);
+    }
+
+    public IEnumerable<Flight?> FindFlightByArrivalCountry(string country)
+    {
+        var airports = _airportServices.FindAirportByCountry(country);
+        return _flightRepository.GetFlightByArrivalAirport(airports);
+    }
+
+    public IEnumerable<Flight?> FindFlightByArrivalAirport(string name)
+    {
+        var airports = _airportServices.FindAirportByName(name);
+        return _flightRepository.GetFlightByArrivalAirport(airports);
+    }
+
+    public IEnumerable<Flight?> FindFlightByDepartureAirport(string name)
+    {
+        var airports = _airportServices.FindAirportByName(name);
+        return _flightRepository.GetFlightByDepartureAirport(airports);
     }
 }

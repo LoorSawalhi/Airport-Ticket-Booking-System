@@ -1,24 +1,17 @@
 namespace Domain.Models;
 
-public class Flight(string id, DateTime departureDate, string departureAirport, string arrivalAirport)
+public class Flight
 {
-    private string _id = id;
-    private DateTime _departureDate = departureDate;
-    private string _departureAirport = departureAirport;
-    private string _arrivalAirport = arrivalAirport;
-    public IEnumerable<FlightClass> classes { get; set; }
+    public string Id { get; set; }
+    public DateTime DepartureDate { get; set; }
+    public string DepartureAirport { get; set; }
+    public string ArrivalAirport { get; set; }
 
-    public required string id { get; set; }
+    public IEnumerable<FlightClass> Classes { get; set; }
 
-    public required DateTime departureDate { get; set; }
-
-    public required string departureAirport { get; set; }
-
-    public required string arrivalAirport { get; set; }
-
-
-    public override string? ToString()
+    public override string ToString()
     {
-        return $"Flight id = {id}, Departure Date = {departureDate}, Departure Airport = {departureAirport}, Arrival Airport = {arrivalAirport} ";
+        return
+            $"Flight id = {Id}, Departure Date = {DepartureDate.Day}, Departure Airport = {DepartureAirport}, Arrival Airport = {ArrivalAirport}";
     }
 }

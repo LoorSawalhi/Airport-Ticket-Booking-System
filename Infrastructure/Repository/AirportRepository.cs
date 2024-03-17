@@ -51,4 +51,9 @@ public class AirportRepository : IAirportRepository
     {
         return GetAllAirports().Where(airport => airport.country.Equals(country, StringComparison.InvariantCultureIgnoreCase));
     }
+    
+    public IEnumerable<Airport> GetAirportByName(string name)
+    {
+        return GetAllAirports().Where(airport => airport.name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+    }
 }

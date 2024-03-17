@@ -10,5 +10,8 @@ public interface IFlightRepository
     public void Add(Flight flight);
     public void Delete(Flight flight);
     public Flight Update(Flight newFlight, string id);
-    public IEnumerable<Flight?> GetFlightByDepartureAirport(string airport);
+    public IEnumerable<Flight?> GetFlightByDepartureAirport(IEnumerable<Airport?> airports);
+    public IEnumerable<Flight?> GetFlightByArrivalAirport(IEnumerable<Airport?> airports);
+
+    // public IEnumerable<Flight?> GetFlightWithRangePrice(float minPrice, float maxPrice);
 }

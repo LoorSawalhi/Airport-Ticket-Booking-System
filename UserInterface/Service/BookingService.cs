@@ -23,7 +23,7 @@ public class BookingService
             throw new Exception("Flight not found.");
         }
 
-        var fClass = flight.classes.FirstOrDefault(c => c.name.Equals(flightClass, StringComparison.InvariantCultureIgnoreCase));
+        var fClass = flight.Classes.FirstOrDefault(c => c.name.Equals(flightClass, StringComparison.InvariantCultureIgnoreCase));
 
         if (fClass == null)
             throw new Exception("Flight not found.");
@@ -34,7 +34,6 @@ public class BookingService
         }
 
         var booking = new Booking(flightId, passengerId, fClass.id);
- 
         // flight.BookSeat(seatNumber);
         // _flightRepository.Save(flight);
         // _bookingRepository.SaveBooking(booking);
