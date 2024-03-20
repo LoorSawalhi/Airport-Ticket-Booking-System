@@ -1,20 +1,24 @@
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Domain.Models;
 using Domain.Repository;
 
 namespace Infrastructre.Repository;
 
-public class BookingRepository : IBookingRepository
+public class BookingRepository(string fileName) : IBookingRepository
 {
-    private string _fileName;
-
-    public BookingRepository(string fileName)
-    {
-        _fileName = fileName;
-    }
-
     public IEnumerable<Booking> GetAllBookings()
     {
-        throw new NotImplementedException();
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = true,
+            HeaderValidated = null,
+        };
+        using var reader = new StreamReader(fileName);
+        using var csv = new CsvReader(reader, config);
+        var records = csv.GetRecords<Booking>();
+        return records.ToList();
     }
 
     public Booking FindById(string id)

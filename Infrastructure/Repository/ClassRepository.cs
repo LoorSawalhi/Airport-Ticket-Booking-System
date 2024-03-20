@@ -1,3 +1,6 @@
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Domain.Models;
 using Domain.Repository;
 
@@ -14,7 +17,24 @@ public class ClassRepository : IClassRepository
 
     public IEnumerable<FlightClass> GetAllClasses()
     {
-        throw new NotImplementedException();
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = true,
+            HeaderValidated = null,
+        };
+        using var reader = new StreamReader(_fileName);
+        using var csv = new CsvReader(reader, config);
+        var records = csv.GetRecords<FlightClass>();
+        return records.ToList();
+    }
+
+    public IEnumerable<FlightClass> GetClassesById(IEnumerable<ClassFlightRelation?> flightRs)
+    {
+        var classes = GetAllClasses();
+        return from classf in classes
+            join flightR in flightRs
+                on classf.Id equals flightR.ClassId
+            select classf;
     }
 
     public FlightClass FindById(string id)

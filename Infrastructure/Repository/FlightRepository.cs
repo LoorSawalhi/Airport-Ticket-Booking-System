@@ -20,11 +20,12 @@ public class FlightRepository : IFlightRepository
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            HasHeaderRecord = false,
+            HasHeaderRecord = true,
+            HeaderValidated = null,
         };
         using var reader = new StreamReader(_fileName);
         using var csv = new CsvReader(reader, config);
-        csv.Context.RegisterClassMap<FlightMap>(); 
+        csv.Context.RegisterClassMap<FlightMap>();
         var records = csv.GetRecords<Flight>();
         return records.ToList();
     }
@@ -34,6 +35,28 @@ public class FlightRepository : IFlightRepository
     {
         return GetAllFlights().FirstOrDefault(flight => flight?.Id == id);
     }
+
+    public IEnumerable<dynamic> FindById(IEnumerable<ClassFlightRelation> flightRs, IEnumerable<FlightClass> classes)
+    {
+        var flights = GetAllFlights();
+        return from flight in flights
+            join flightR in flightRs
+                on flight.Id equals flightR.FlightId into flightRGroup
+            from flightR in flightRGroup.DefaultIfEmpty()
+            join classInfo in classes
+                on flightR?.ClassId equals classInfo.Id into classInfoGroup
+            from classInfo in classInfoGroup.DefaultIfEmpty()
+            select new
+            {
+                FlightId = flight.Id,
+                DepartureDate = flight.DepartureDate,
+                DepartureAirport = flight.DepartureAirport,
+                ArrivalAirport = flight.ArrivalAirport,
+                ClassName = classInfo.Name,
+                Price = flightR.Price
+            };
+    }
+
 
     public void Add(Flight flight)
     {

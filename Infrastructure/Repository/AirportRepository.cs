@@ -6,22 +6,16 @@ using Domain.Repository;
 
 namespace Infrastructre.Repository;
 
-public class AirportRepository : IAirportRepository
+public sealed class AirportRepository(string fileName) : IAirportRepository
 {
-    private string _fileName;
-
-    public AirportRepository(string fileName)
-    {
-        _fileName = fileName;
-    }
-
     public IEnumerable<Airport> GetAllAirports()
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            HasHeaderRecord = false,
+            HasHeaderRecord = true,
+            HeaderValidated = null,
         };
-        using var reader = new StreamReader(_fileName);
+        using var reader = new StreamReader(fileName);
         using var csv = new CsvReader(reader, config);
         var records = csv.GetRecords<Airport>();
         return records.ToList();

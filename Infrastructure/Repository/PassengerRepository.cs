@@ -13,6 +13,7 @@ public sealed class PassengerRepository(string fileName) : IPassengerRepository
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HasHeaderRecord = false,
+            HeaderValidated = null,
         };
         using var reader = new StreamReader(fileName);
         using var csv = new CsvReader(reader, config);
