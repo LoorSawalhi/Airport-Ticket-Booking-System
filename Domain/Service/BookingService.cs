@@ -1,9 +1,9 @@
-using Domain.Models;
 using Domain.Repository;
+using Domain.Service_Interface;
 
-namespace UserInterface.Service;
+namespace Domain.Service;
 
-public class BookingService
+public class BookingService : IBookingService
 {
     private readonly IFlightRepository _flightRepository;
     private readonly IBookingRepository _bookingRepository;

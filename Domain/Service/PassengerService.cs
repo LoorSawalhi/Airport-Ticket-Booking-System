@@ -1,19 +1,13 @@
 using Domain.Repository;
+using Domain.Service_Interface;
 
-namespace UserInterface.Service;
+namespace Domain.Service;
 
-internal class PassengerService
+public sealed class PassengerService(IPassengerRepository passengerRepository) : IPassengerService
 {
-    private readonly IPassengerRepository _passengerRepository;
-
-        public PassengerService(IPassengerRepository passengerRepository)
+    public Domain.Models.Passenger? FindPassengerById(string id)
         {
-            _passengerRepository = passengerRepository;
-        }
-
-        public Domain.Models.Passenger? FindPassengerById(string id)
-        {
-            return _passengerRepository.FindById(id);
+            return passengerRepository.FindById(id);
         }
 
         // public void CreateFlight(FlightData data)

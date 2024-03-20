@@ -9,19 +9,26 @@ namespace Domain.Service;
 public sealed class FlightService : IFlightService
 {
     private readonly IFlightRepository _flightRepository;
-    private readonly AirportService _airportService;
-    private readonly RClassFlightService _rClassFlightService;
-    private readonly FlightClassService _flightClassService;
+    private readonly IAirportService _airportService;
+    private readonly IRClassFlightService _rClassFlightService;
+    private readonly IFlightClassService _flightClassService;
 
     private static Passenger _passenger;
 
-    public FlightService(IFlightRepository flightRepository, AirportService airportService,
-        RClassFlightService rClassFlightService, FlightClassService flightClassService, Passenger passenge)
+    public FlightService(IFlightRepository flightRepository,
+        IAirportService airportService,
+        IRClassFlightService rClassFlightService, IFlightClassService flightClassService)
     {
         _flightRepository = flightRepository;
         _airportService = airportService;
         _rClassFlightService = rClassFlightService;
         _flightClassService = flightClassService;
+    }
+
+    public static Passenger passenger
+    {
+        get => _passenger;
+        set => _passenger = value;
     }
 
     public Flight? FindFlightById(string id)

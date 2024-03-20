@@ -1,9 +1,10 @@
 using Domain.Models;
 using Domain.Repository;
+using Domain.Service_Interface;
 
-namespace UserInterface.Service;
+namespace Domain.Service;
 
-public class FlightClassService
+public class FlightClassService : IFlightClassService
 {
     private readonly IClassRepository _classRepository;
 
