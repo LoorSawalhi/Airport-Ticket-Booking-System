@@ -4,13 +4,11 @@ public class Passenger
 {
     private string _id;
     private string _name;
-    private int _age;
 
-    public Passenger(string id, string name, int age)
+    public Passenger(string id, string name)
     {
         _id = id;
         _name = name;
-        _age = age;
     }
 
     public string id
@@ -23,11 +21,5 @@ public class Passenger
     {
         get => _name;
         set => _name = value ?? throw new ArgumentNullException(nameof(value));
-    }
-
-    public int age
-    {
-        get => _age;
-        set => _age = value;
     }
 }

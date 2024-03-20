@@ -7,11 +7,10 @@ public class Flight
     public string DepartureAirport { get; set; }
     public string ArrivalAirport { get; set; }
 
-    public IEnumerable<FlightClass> Classes { get; set; }
 
     public override string ToString()
     {
         return
-            $"Flight id = {Id}, Departure Date = {DepartureDate.Day}, Departure Airport = {DepartureAirport}, Arrival Airport = {ArrivalAirport}";
+            $"Flight id = {Id}, Departure Date = {DepartureDate.Day}-{DepartureDate.Month}-{DepartureDate.Year}, Departure Airport = {DepartureAirport}, Arrival Airport = {ArrivalAirport}";
     }
 }
