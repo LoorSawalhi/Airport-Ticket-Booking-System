@@ -1,3 +1,4 @@
-Id,Class,MaxPrice,MinPrice,MaxSeat
-1,ClassType.ECONOMY,30,91,23
-2,ClassType.BUSINESS,74,126,66
+Id,Name,MaxPrice,MinPrice,MaxSeat
+1,ClassType.ECONOMY,14,74,21
+2,ClassType.BUSINESS,34,122,58
+3,ClassType.FIRST_CLASS,66,192,42
