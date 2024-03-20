@@ -1,0 +1,3 @@
+Id,Class,MaxPrice,MinPrice,MaxSeat
+1,ClassType.ECONOMY,30,91,23
+2,ClassType.BUSINESS,74,126,66
