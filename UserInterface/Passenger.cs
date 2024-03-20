@@ -1,9 +1,12 @@
 using Infrastructre.Repository;
 using UserInterface.Controller;
-using UserInterface.CustomException;
-using UserInterface.Service;
-using Domain.Models;
+using Domain.Service;
+using Domain.CustomException;
+using Domain.Service_Interface;
+using Microsoft.Extensions.DependencyInjection;
+using static Domain.InputHandling;
 using static UserInterface.Utilities;
+
 
 namespace UserInterface;
 
@@ -11,15 +14,22 @@ internal class Passenger
 {
     private const string InvalidPassenger = "No Available Passenger with This ID";
     private static int _inputLine;
-    public static AirportServices airportService;
-    public static FlightServices flightService;
+    public static IAirportService AirportService;
+    public static IFlightService FlightService;
+    public static IRClassFlightService RClassFlightService;
+    public static IFlightClassService FlightClassService;
+    public static IBookingService BookingService;
+
     public static FlightController flightController;
+
+    public static Domain.Models.Passenger? passenger;
 
 
     public static void Menu()
     {
-        InitServices(out airportService, out flightService, out var passengerService);
-        HandleUserInput<NoAvailablePassengerException, VoidResult>(() =>
+        InitServices(out AirportService, out FlightService, out var passengerService, out RClassFlightService,
+            out BookingService, out FlightClassService);
+        HandleUserInput<NoAvailablePassengerException>(() =>
         {
             Console.Write("""
                           You must be a passenger, Welcome!!
@@ -30,35 +40,38 @@ internal class Passenger
             var userId = Console.ReadLine();
             if (userId != null)
             {
-                var passenger = passengerService.FindPassengerById(userId);
+                passenger = passengerService.FindPassengerById(userId);
                 if (passenger == null)
                     throw new NoAvailablePassengerException(InvalidPassenger);
 
+                flightController = new FlightController(FlightService, RClassFlightService, FlightClassService, passenger);
                 PassengerOptions();
             }
             else
             {
                 throw new NoAvailablePassengerException(InvalidPassenger);
             }
-
-            return new VoidResult();
         });
     }
 
-    private static void InitServices(out AirportServices airportService, out FlightServices flightService, out PassengerService passengerService)
+    private static void InitServices(out IAirportService airportService, out IFlightService flightService,
+        out IPassengerService passengerService, out IRClassFlightService rClassFlightService, out IBookingService bookingService
+        , out IFlightClassService flightClassService)
     {
-        var passengerRepository = new PassengerRepository("/home/loor/Desktop/Foothill Training/C#/AirportTicketBookingSystem/Infrastructure/passengers.csv");
-        passengerService = new PassengerService(passengerRepository);
-        var airportRepository = new AirportRepository("/home/loor/Desktop/Foothill Training/C#/AirportTicketBookingSystem/Infrastructure/airports.csv");
-        var flightRepository = new FlightRepository("/home/loor/Desktop/Foothill Training/C#/AirportTicketBookingSystem/Infrastructure/flights.csv");
-        airportService = new AirportServices(airportRepository);
-        flightService = new FlightServices(flightRepository, airportService);
-        flightController = new FlightController(flightService);
+        var services = ServiceConfiguration.ConfigureServices();
+        var serviceProvider = services.BuildServiceProvider();
+
+        airportService = serviceProvider.GetRequiredService<IAirportService>();
+        passengerService = serviceProvider.GetRequiredService<IPassengerService>();
+        rClassFlightService = serviceProvider.GetRequiredService<IRClassFlightService>();
+        bookingService = serviceProvider.GetRequiredService<IBookingService>();
+        flightClassService = serviceProvider.GetRequiredService<IFlightClassService>();
+        flightService = serviceProvider.GetRequiredService<IFlightService>();
     }
 
     private static void PassengerOptions()
     {
-        HandleUserInput<NotValidOptionsException, VoidResult>(() =>
+        HandleUserInput<NotValidUserInputException>(() =>
         {
             Console.Write("""
                           Welcome Again !! Here are your options
@@ -70,11 +83,10 @@ internal class Passenger
                           5) View Personal Bookings
                           6) Log out
 
-                          Option :
+                          Option : 
                           """);
             _inputLine = ReadOption();
             Options(_inputLine);
-            return new VoidResult();
         });
     }
 
@@ -84,10 +96,10 @@ internal class Passenger
         switch (option)
         {
             case bookFlight:
-                flightController.SearchFlights();
+                flightController.BookingList();
                 break;
             case searchFlight:
-                //Search for Flights
+                flightController.SearchFlights();
                 break;
             case 3:
                 //Cancel Your Bookings
@@ -102,7 +114,7 @@ internal class Passenger
                 //Log out
                 break;
             default:
-                throw new NotValidOptionsException(InvalidOption);
+                throw new NotValidUserInputException(InvalidOption);
         }
     }
 }

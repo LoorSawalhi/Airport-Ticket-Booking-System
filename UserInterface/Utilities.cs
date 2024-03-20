@@ -1,6 +1,4 @@
-using System.Runtime.InteropServices.JavaScript;
-using Domain.Models;
-using UserInterface.CustomException;
+using Domain.CustomException;
 
 namespace UserInterface;
 
@@ -11,7 +9,7 @@ internal class Utilities
 
     public static void Menu()
     {
-        HandleUserInput<NotValidOptionsException, VoidResult>(() =>
+        Domain.InputHandling.HandleUserInput<NotValidUserInputException>(() =>
             {
                 Console.Write("""
                               Welcome to the Airport Booking System
@@ -19,11 +17,10 @@ internal class Utilities
                               1) Manager
                               2) Passenger
 
-                              Option :
+                              Option : 
                               """);
                 _inputLine = ReadOption();
                 Options(_inputLine);
-                return new VoidResult();
             });
     }
 
@@ -38,18 +35,8 @@ internal class Utilities
                     Passenger.Menu();
                     break;
                 default:
-                    throw new NotValidOptionsException(InvalidOption);
+                    throw new NotValidUserInputException(InvalidOption);
             }
-    }
-
-    public static int ExitCond()
-    {
-        Console.Write("To exit type e or E => ");
-        var e = Console.ReadLine() ?? string.Empty;
-        Console.WriteLine();
-        if (e.ToLower().Trim().Equals("e")) return -1;
-
-        return 0;
     }
 
     public static int ReadOption()
@@ -57,27 +44,9 @@ internal class Utilities
         var readLine = Console.ReadLine();
         Console.WriteLine();
         if (readLine == null || !int.TryParse(readLine, out var option))
-            throw new NotValidOptionsException(InvalidOption);
+            throw new NotValidUserInputException(InvalidOption);
 
         return option;
-    }
-
-    public static T? HandleUserInput<TException, T>(Func<T> optionAction) where TException : Exception
-    {
-        while (true)
-            try
-            {
-                return optionAction();
-            }
-            catch (TException e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine();
-                if (ExitCond() == -1)
-                    break;
-            }
-
-        return default(T);
     }
 
     public static string ReadString(string message)
@@ -89,5 +58,16 @@ internal class Utilities
             throw new EmptyStringException("Empty Input!!");
 
         return readLine;
+    }
+
+    public static float ReadPrice(string message)
+    {
+        Console.Write(message);
+        var readLine = Console.ReadLine();
+        Console.WriteLine();
+        if (readLine == null || !float.TryParse(readLine, out var price) || price < 0)
+            throw new NotValidUserInputException("Invalid Price");
+
+        return price;
     }
 }

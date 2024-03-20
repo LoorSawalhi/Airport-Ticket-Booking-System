@@ -1,5 +1,6 @@
-using UserInterface.CustomException;
+using Domain.CustomException;
 using static UserInterface.Utilities;
+using static Domain.InputHandling;
 
 namespace UserInterface;
 
@@ -7,27 +8,20 @@ internal class Mannager
 {
     public static void Menu()
     {
-        while (true)
-            try
-            {
-                Console.WriteLine("""
-                                  Hey Manager !! Here are your options
-                                  1) Filter Bookings
-                                  2) Upload Flights
-                                  3) Log out
-                                  """);
-                var readLine = Console.ReadLine();
-                if (readLine != null && int.TryParse(readLine, out var option))
-                    Options(option);
-                else
-                    throw new NotValidOptionsException(InvalidOption);
-            }
-            catch (NotValidOptionsException e)
-            {
-                Console.WriteLine(e.Message);
-                if (ExitCond() == -1)
-                    break;
-            }
+        HandleUserInput<NotValidUserInputException>(() =>
+        {
+            Console.WriteLine("""
+                              Hey Manager !! Here are your options
+                              1) Filter Bookings
+                              2) Upload Flights
+                              3) Log out
+                              """);
+            var readLine = Console.ReadLine();
+            if (readLine != null && int.TryParse(readLine, out var option))
+                Options(option);
+            else
+                throw new NotValidUserInputException(InvalidOption);
+        });
     }
 
     private static void Options(int option)
@@ -44,7 +38,7 @@ internal class Mannager
                 //Log out
                 break;
             default:
-                throw new NotValidOptionsException(InvalidOption);
+                throw new NotValidUserInputException(InvalidOption);
         }
     }
 }
