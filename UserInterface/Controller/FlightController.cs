@@ -1,6 +1,8 @@
+using Domain.CustomException;
 using Domain.Models;
-using UserInterface.CustomException;
-using UserInterface.Service;
+using Domain.Service;
+using Domain.Service_Interface;
+using static Domain.InputHandling;
 
 namespace UserInterface.Controller;
 
@@ -8,25 +10,27 @@ using static Utilities;
 
 internal sealed class FlightController
 {
-    private readonly FlightServices _flightServices;
+    private readonly IFlightService _flightService;
+    private readonly IRClassFlightService _rClassFlightService;
+    private readonly IFlightClassService _flightClassService;
+
+    private static Domain.Models.Passenger _passenger;
     private static int _inputLine;
 
-    public FlightController(FlightServices flightServices)
+    public FlightController(IFlightService flightService, IRClassFlightService rClassFlightService, IFlightClassService flightClassService, Domain.Models.Passenger passenger)
     {
-        _flightServices = flightServices;
+        _flightService = flightService;
+        _rClassFlightService = rClassFlightService;
+        _flightClassService = flightClassService;
+        _passenger = passenger;
     }
 
-    public void Book(Flight flight)
+    public IEnumerable<Flight> SearchFlights()
     {
-        //
-    }
-
-    public void SearchFlights()
-    {
-        HandleUserInput<NotValidOptionsException, VoidResult>(() =>
+        IEnumerable<Flight> flights = HandleUserInput<NotValidUserInputException, IEnumerable<Flight>>(() =>
         {
             Console.Write("""
-                          To book a flight, search a flight by:
+                          Search a Flight By :
                           1) Departure Country
                           2) Arrival Country
                           3) Price (Under a number)
@@ -35,73 +39,72 @@ internal sealed class FlightController
                           6) Arrival Airport
                           7) Class
 
-                          Option :
+                          Option : 
                           """);
             _inputLine = ReadOption();
+            var price = 0.0f;
+            var country = "";
+            IEnumerable<dynamic> data;
             switch (_inputLine)
             {
                 case 1:
-                    SearchByDepartureCountry();
-                    break;
+                    country = ReadString("Enter departure country : ");
+                    return _flightService.FindFlightByDepartureCountry(country);
                 case 2:
-                    SearchByArrivalCountry();
-                    break;
+                    country = ReadString("Enter arrival country : ");
+                    return _flightService.FindFlightByArrivalCountry(country);
                 case 3:
-                    //Cancel Your Bookings
+                    price = ReadPrice("Enter price : "); //Price (Under a number)
+                    data = _flightService.FindFlightsByPrice(0, price);
+
                     break;
                 case 4:
-                    //Modify Your Booking
-                    break;
+                    price = ReadPrice("Enter price : "); //Price (Above a number)
+                    data = _flightService.FindFlightsByPrice(0, price);
+                break;
                 case 5:
-                    //View Personal Bookings
+                    //Departure Airport
                     break;
                 case 6:
-                    //Log out
+                    //Arrival Airport
+                    break;
+                case 7:
+                    //Class
                     break;
                 default:
-                    throw new NotValidOptionsException(InvalidOption);
+                    throw new NotValidUserInputException(InvalidOption);
             }
 
-            return new VoidResult();
+            return null;
         });
-    }
 
-    private void SearchByDepartureCountry()
-    {
-        HandleUserInput<EmptyQueryResultException, IEnumerable<Flight>>(() =>
+        Console.WriteLine("Your Search Results Are : ");
+        var iterator = 1;
+        foreach (var flight in flights)
         {
-            var country = ReadString("Enter departure country: ");
-            var flights = _flightServices.FindFlightByDepartureCountry(country).ToList();
-            if (flights.ToList().Capacity == 0)
-                throw new EmptyQueryResultException($"No Flights Departure From {country}");
+            Console.WriteLine($"{iterator} - {flight}");
+            iterator++;
+        }
 
-            var iterator = 1;
-            foreach (var flight in flights)
-            {
-                Console.WriteLine($"{iterator}- {flight}");
-            }
-
-            return flights;
-        });
+        return flights;
     }
 
-    private void SearchByArrivalCountry()
+    public void BookingList()
     {
-        HandleUserInput<EmptyQueryResultException, IEnumerable<Flight>>(() =>
+        HandleUserInput<NotValidFlightIdException>(() =>
         {
-            var country = ReadString("Enter arrival country: ");
-            var flights = _flightServices.FindFlightByArrivalCountry(country).ToList();
-            if (flights.Capacity == 0)
-                throw new EmptyQueryResultException($"No Flights Arrives at {country}");
+            Console.WriteLine("""
+                              To Book a Flight You Must Search One : 
+                              
+                              """);
+            var flights = SearchFlights();
+            var flightId = ReadString("Choose a Flight By Id : ");
+            var flight = flights.FirstOrDefault(f => f.Id.Equals(flightId));
+            if (flight == null)
+                throw new NotValidFlightIdException("Wrong Flight Id !!");
 
-            foreach (var flight in flights)
-            {
-                Console.WriteLine(flight);
-            }
-
-            return flights;
+            Console.WriteLine(flight);
+            throw new BreakLoopException();
         });
     }
-
-    // Add more methods as needed
 }

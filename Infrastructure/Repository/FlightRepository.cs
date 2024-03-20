@@ -3,7 +3,6 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Domain.Models;
 using Domain.Repository;
-using Infrastructre.Mapper;
 
 namespace Infrastructre.Repository;
 
@@ -25,7 +24,6 @@ public class FlightRepository : IFlightRepository
         };
         using var reader = new StreamReader(_fileName);
         using var csv = new CsvReader(reader, config);
-        csv.Context.RegisterClassMap<FlightMap>();
         var records = csv.GetRecords<Flight>();
         return records.ToList();
     }
