@@ -18,8 +18,8 @@ public static class ServiceConfiguration
         services.AddSingleton<IAirportRepository>(new AirportRepository($"{basePath}airport.csv"));
         services.AddSingleton<IFlightRepository>(new FlightRepository($"{basePath}flights.csv"));
         services.AddSingleton<IRClassFlightRepository>(new RClassFlightRepository($"{basePath}flight_classes.csv"));
-        services.AddSingleton<IBookingRepository>(new BookingRepository($"{basePath}flight_classes.csv"));
-        services.AddSingleton<IClassRepository>(new ClassRepository($"{basePath}flight_classes.csv"));
+        services.AddSingleton<IBookingRepository>(new BookingRepository($"{basePath}bookings.csv"));
+        services.AddSingleton<IClassRepository>(new ClassRepository($"{basePath}classes.csv"));
 
         // Register services
         services.AddSingleton<IPassengerService, PassengerService>();

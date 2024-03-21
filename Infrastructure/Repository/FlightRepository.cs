@@ -1,20 +1,14 @@
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
 
 namespace Infrastructre.Repository;
 
-public class FlightRepository : IFlightRepository
+public sealed class FlightRepository(string fileName) : IFlightRepository
 {
-    private readonly string _fileName;
-
-    public FlightRepository(string fileName)
-    {
-        _fileName = fileName;
-    }
-
     public IEnumerable<Flight?> GetAllFlights()
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -22,39 +16,54 @@ public class FlightRepository : IFlightRepository
             HasHeaderRecord = true,
             HeaderValidated = null,
         };
-        using var reader = new StreamReader(_fileName);
+        using var reader = new StreamReader(fileName);
         using var csv = new CsvReader(reader, config);
         var records = csv.GetRecords<Flight>();
         return records.ToList();
     }
 
-
-    public Flight? FindById(string id)
+    public Flight FindById(string id)
     {
-        return GetAllFlights().FirstOrDefault(flight => flight?.Id == id);
+        return GetAllFlights().FirstOrDefault(flight => flight?.Id == id) ??
+               throw new EmptyQueryResultException($"No Flights With Such ID {id}");
     }
 
-    public IEnumerable<dynamic> FindById(IEnumerable<ClassFlightRelation> flightRs, IEnumerable<FlightClass> classes)
+    public IEnumerable<Flight> GetFlightsByRelations(IEnumerable<ClassFlightRelation> relations)
     {
         var flights = GetAllFlights();
         return from flight in flights
-            join flightR in flightRs
-                on flight.Id equals flightR.FlightId into flightRGroup
-            from flightR in flightRGroup.DefaultIfEmpty()
-            join classInfo in classes
-                on flightR?.ClassId equals classInfo.Id into classInfoGroup
-            from classInfo in classInfoGroup.DefaultIfEmpty()
-            select new
-            {
-                FlightId = flight.Id,
-                DepartureDate = flight.DepartureDate,
-                DepartureAirport = flight.DepartureAirport,
-                ArrivalAirport = flight.ArrivalAirport,
-                ClassName = classInfo.Name,
-                Price = flightR.Price
-            };
+            join relation in relations
+                on flight.Id equals relation.FlightId
+            select flight;
     }
 
+    public IEnumerable<Flight> GetFlightByDepartureAirport(IEnumerable<Airport?> departureAirports)
+    {
+        var flights = GetAllFlights();
+
+        return from flight in flights
+            join airport in departureAirports
+                on flight.DepartureAirport equals airport.Id
+                select flight;
+    }
+
+    public IEnumerable<Flight> GetFlightByArrivalAirport(IEnumerable<Airport?> airports)
+    {
+        var flights = GetAllFlights();
+        return from flight in flights
+            join airport in airports
+                on flight.ArrivalAirport equals airport.Id
+            select flight;
+    }
+
+    public IEnumerable<ClassFlightRelation> GetFlightByClass(IEnumerable<ClassFlightRelation> relations)
+    {
+        var flights = GetAllFlights();
+        return from flight in flights
+            join relation in relations
+                on flight.Id equals relation.FlightId
+            select relation;
+    }
 
     public void Add(Flight flight)
     {
@@ -70,28 +79,4 @@ public class FlightRepository : IFlightRepository
     {
         throw new NotImplementedException();
     }
-
-    public IEnumerable<Flight?> GetFlightByDepartureAirport(IEnumerable<Airport?> airports)
-    {
-        var flights = GetAllFlights();
-
-        return from flight in flights
-            join airport in airports
-                on flight.DepartureAirport equals airport.id
-                select flight;
-    }
-
-    public IEnumerable<Flight?> GetFlightByArrivalAirport(IEnumerable<Airport?> airports)
-    {
-        var flights = GetAllFlights();
-        return from flight in flights
-            join airport in airports
-                on flight.ArrivalAirport equals airport.id
-            select flight;
-    }
-
-    // public IEnumerable<Flight?> GetFlightWithRangePrice(float minPrice, float maxPrice)
-    // {
-    //     return GetAllFlights().Where(flight => flight != null && flight.);
-    // }
 }

@@ -1,30 +1,49 @@
+using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
 using Domain.Service_Interface;
+using static Domain.InputHandling;
 
 namespace Domain.Service;
 
-public class RClassFlightService : IRClassFlightService
+public sealed class RClassFlightService(
+    IRClassFlightRepository classFlightRepository,
+    IFlightClassService flightClassService)
+    : IRClassFlightService
 {
-    private readonly IRClassFlightRepository _rClassFlightRepository;
+    private readonly IFlightClassService _flightClassService = flightClassService;
 
-    public RClassFlightService(IRClassFlightRepository classFlightRepository)
+
+    public IEnumerable<ClassFlightRelation> FindAllRelations()
     {
-        _rClassFlightRepository = classFlightRepository;
+        return classFlightRepository.GetAllFlightsClasses();
     }
 
-    public IEnumerable<ClassFlightRelation?> FindFlightClassesByFlightId(string flightId)
+    public IEnumerable<ClassFlightRelation> FindFlightClassesByFlightId(string flightId)
     {
-        return _rClassFlightRepository.FindFlightByFlightId(flightId);
+        var classes = classFlightRepository.FindFlightByFlightId(flightId);
+        CheckListIfEmpty(classes, $"No Available Classes For Such Flight");
+        return classes;
     }
 
-    public IEnumerable<ClassFlightRelation?> FindFlightsByClassId(string classId)
+    public IEnumerable<FlightDetails> FindFlightClassesAndPrice(IEnumerable<FlightInfo> flights, IEnumerable<FlightClass> classes, IEnumerable<ClassFlightRelation> relations)
     {
-        return _rClassFlightRepository.FindFlightByClassId(classId);
+        var flightDetails = classFlightRepository.GetFlightClassesAndPriceByFlight(flights, classes, relations);
+        CheckListIfEmpty(flightDetails, $"No Available Flights With Such Classes");
+        return flightDetails;
+    }
+
+    public IEnumerable<ClassFlightRelation> FindFlightsByClassId(string classId)
+    {
+        var classes = classFlightRepository.FindFlightByClassId(classId);
+        CheckListIfEmpty(classes, $"No Available Flights With Such Class ID {classId}");
+        return classes;
     }
 
     public IEnumerable<ClassFlightRelation?> FindFlightsByPrice(float minPrice, float maxPrice)
     {
-        return _rClassFlightRepository.GetFlightByPrice(minPrice, maxPrice);
+        var flights = classFlightRepository.GetFlightByPrice(minPrice, maxPrice);
+        CheckListIfEmpty(flights, $"No Available Flights With Price Range [{minPrice}, {maxPrice}]");
+        return flights;
     }
 }

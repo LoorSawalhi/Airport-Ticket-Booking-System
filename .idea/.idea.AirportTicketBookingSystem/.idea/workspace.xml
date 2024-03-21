@@ -9,14 +9,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a51be3f-8457-42ea-96f9-d51013bc8298" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/UserInterface/Service/AirportServices.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.AirportTicketBookingSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AirportTicketBookingSystem/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/Repository/IAirportRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Repository/IAirportRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/InputHandling.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/InputHandling.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Models/Airport.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Models/Airport.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Models/FlightClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Models/FlightClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Models/FlightDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Models/FlightDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Models/FlightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Models/FlightInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Domain/Repository/IFlightRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Repository/IFlightRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Repository/IRClassFlightRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Repository/IRClassFlightRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Service Interface/IAirportService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Service Interface/IAirportService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Service Interface/IFlightClassService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Service Interface/IFlightClassService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Service Interface/IFlightService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Service Interface/IFlightService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Service Interface/IRClassFlightService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Service Interface/IRClassFlightService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Service/AirportService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Service/AirportService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Service/FlightClassService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Service/FlightClassService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Service/FlightService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Service/FlightService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Service/RClassFlightService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Service/RClassFlightService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Infrastructure/Repository/AirportRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Repository/AirportRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Infrastructure/Repository/FlightRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Repository/FlightRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserInterface/Passenger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserInterface/Passenger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserInterface/Service/FlightServices.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserInterface/Service/FlightServices.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Repository/RClassFlightRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Repository/RClassFlightRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/classes.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/classes.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserInterface/Controller/FlightController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserInterface/Controller/FlightController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserInterface/ServiceConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserInterface/ServiceConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserInterface/generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/UserInterface/generator.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +42,13 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a8b08df6d39c4db5b78bf3960726cc8f2da00/9a/fe7337bf/Console.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f4cef36c3fed439e90d56437758be42bb2c600/4a/48968968/String.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f4cef36c3fed439e90d56437758be42bb2c600/59/ea84ee66/Single.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f4cef36c3fed439e90d56437758be42bb2c600/70/bf1805fa/CultureInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f4cef36c3fed439e90d56437758be42bb2c600/75/c0a317c0/RuntimeHelpers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f4cef36c3fed439e90d56437758be42bb2c600/ac/8b931d7c/DefaultInterpolatedStringHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f4cef36c3fed439e90d56437758be42bb2c600/d9/2818407a/Exception.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/UserInterface/Mannager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/UserInterface/Passenger.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/UserInterface/Program.cs" root0="FORCE_HIGHLIGHTING" />
@@ -125,12 +146,25 @@
       <workItem from="1710745759265" duration="20786000" />
       <workItem from="1710775524353" duration="367000" />
       <workItem from="1710839066762" duration="10362000" />
-      <workItem from="1710923281944" duration="1315000" />
+      <workItem from="1710923281944" duration="15199000" />
+      <workItem from="1710938550371" duration="3721000" />
+      <workItem from="1711004868504" duration="10370000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />

@@ -1,3 +1,4 @@
+using Domain.Models;
 using Domain.Repository;
 using Domain.Service_Interface;
 
@@ -5,9 +6,9 @@ namespace Domain.Service;
 
 public sealed class PassengerService(IPassengerRepository passengerRepository) : IPassengerService
 {
-    public Domain.Models.Passenger? FindPassengerById(string id)
+    public Passenger FindPassengerById(string id)
         {
-            return passengerRepository.FindById(id);
+            return passengerRepository.FindById(id)!;
         }
 
         // public void CreateFlight(FlightData data)

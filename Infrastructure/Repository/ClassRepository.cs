@@ -1,20 +1,14 @@
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
 
 namespace Infrastructre.Repository;
 
-public class ClassRepository : IClassRepository
+public sealed class ClassRepository(string fileName) : IClassRepository
 {
-    private string _fileName;
-
-    public ClassRepository(string fileName)
-    {
-        _fileName = fileName;
-    }
-
     public IEnumerable<FlightClass> GetAllClasses()
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -22,7 +16,7 @@ public class ClassRepository : IClassRepository
             HasHeaderRecord = true,
             HeaderValidated = null,
         };
-        using var reader = new StreamReader(_fileName);
+        using var reader = new StreamReader(fileName);
         using var csv = new CsvReader(reader, config);
         var records = csv.GetRecords<FlightClass>();
         return records.ToList();
@@ -37,9 +31,17 @@ public class ClassRepository : IClassRepository
             select classf;
     }
 
+    public FlightClass GetClassByName(string className)
+    {
+        return GetAllClasses().FirstOrDefault(classN =>
+            classN.Name.Equals(className, StringComparison.InvariantCultureIgnoreCase))
+               ?? throw new EmptyQueryResultException($"No Such Class Named {className}");
+    }
+
     public FlightClass FindById(string id)
     {
-        throw new NotImplementedException();
+        return GetAllClasses().FirstOrDefault(fClass => fClass?.Id == id) ??
+               throw new EmptyQueryResultException($"No Class With Such ID {id}");
     }
 
     public void Add(FlightClass flightClass)

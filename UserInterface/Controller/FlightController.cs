@@ -25,9 +25,10 @@ internal sealed class FlightController
         _passenger = passenger;
     }
 
-    public IEnumerable<Flight> SearchFlights()
+    public IEnumerable<FlightDetails> SearchFlights()
     {
-        IEnumerable<Flight> flights = HandleUserInput<NotValidUserInputException, IEnumerable<Flight>>(() =>
+        var flights = HandleUserInput<NotValidUserInputException, EmptyQueryResultException,
+            IEnumerable<FlightDetails>>(() =>
         {
             Console.Write("""
                           Search a Flight By :
@@ -43,39 +44,43 @@ internal sealed class FlightController
                           """);
             _inputLine = ReadOption();
             var price = 0.0f;
-            var country = "";
-            IEnumerable<dynamic> data;
+            var readString = "";
+            IEnumerable<FlightDetails> data = null;
             switch (_inputLine)
             {
                 case 1:
-                    country = ReadString("Enter departure country : ");
-                    return _flightService.FindFlightByDepartureCountry(country);
+                    readString = ReadString("Enter departure country : ");
+                    data = _flightService.FindFlightByDepartureCountry(readString);
+                    break;
                 case 2:
-                    country = ReadString("Enter arrival country : ");
-                    return _flightService.FindFlightByArrivalCountry(country);
+                    readString = ReadString("Enter arrival country : ");
+                    data = _flightService.FindFlightByArrivalCountry(readString);
+                    break;
                 case 3:
                     price = ReadPrice("Enter price : "); //Price (Under a number)
                     data = _flightService.FindFlightsByPrice(0, price);
-
                     break;
                 case 4:
                     price = ReadPrice("Enter price : "); //Price (Above a number)
-                    data = _flightService.FindFlightsByPrice(0, price);
-                break;
+                    data = _flightService.FindFlightsByPrice(price, float.MaxValue);
+                    break;
                 case 5:
-                    //Departure Airport
+                    readString = ReadString("Enter departure airport : ");
+                    data = _flightService.FindFlightByDepartureAirport(readString);
                     break;
                 case 6:
-                    //Arrival Airport
+                    readString = ReadString("Enter arrival airport : ");
+                    data = _flightService.FindFlightByArrivalAirport(readString);
                     break;
                 case 7:
-                    //Class
+                    readString = ReadString("Enter flight class : ");
+                    data = _flightService.FindFlightByClass(readString);
                     break;
                 default:
                     throw new NotValidUserInputException(InvalidOption);
             }
 
-            return null;
+            return data;
         });
 
         Console.WriteLine("Your Search Results Are : ");
@@ -86,6 +91,7 @@ internal sealed class FlightController
             iterator++;
         }
 
+        Console.WriteLine();
         return flights;
     }
 
@@ -99,7 +105,7 @@ internal sealed class FlightController
                               """);
             var flights = SearchFlights();
             var flightId = ReadString("Choose a Flight By Id : ");
-            var flight = flights.FirstOrDefault(f => f.Id.Equals(flightId));
+            var flight = flights.FirstOrDefault(f => f.id.Equals(flightId));
             if (flight == null)
                 throw new NotValidFlightIdException("Wrong Flight Id !!");
 

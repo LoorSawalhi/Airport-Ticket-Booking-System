@@ -1,12 +1,13 @@
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
 
 namespace Infrastructre.Repository;
 
-public class BookingRepository(string fileName) : IBookingRepository
+public sealed class BookingRepository(string fileName) : IBookingRepository
 {
     public IEnumerable<Booking> GetAllBookings()
     {
@@ -23,7 +24,8 @@ public class BookingRepository(string fileName) : IBookingRepository
 
     public Booking FindById(string id)
     {
-        throw new NotImplementedException();
+        return GetAllBookings().FirstOrDefault(booking => booking?.Id == id) ??
+               throw new EmptyQueryResultException($"No Booking With Such ID {id}");
     }
 
     public void Add(Booking booking)

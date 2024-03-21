@@ -1,20 +1,28 @@
 using Domain.Models;
 using Domain.Repository;
 using Domain.Service_Interface;
+using static Domain.InputHandling;
 
 namespace Domain.Service;
 
-public class FlightClassService : IFlightClassService
+public sealed class FlightClassService(IClassRepository classRepository) : IFlightClassService
 {
-    private readonly IClassRepository _classRepository;
-
-    public FlightClassService(IClassRepository classRepository)
+    public IEnumerable<FlightClass> GetAllClasses()
     {
-        _classRepository = classRepository;
+        var classes = classRepository.GetAllClasses();
+        CheckListIfEmpty(classes, $"No Available Classes");
+        return classes;
     }
 
     public IEnumerable<FlightClass> GetClassesById(IEnumerable<ClassFlightRelation?> flightRs)
     {
-        throw new NotImplementedException();
+        var classes = classRepository.GetClassesById(flightRs);
+        CheckListIfEmpty(classes, $"No Available Classes");
+        return classes;
+    }
+
+    public FlightClass GetClassByName(string className)
+    {
+        return classRepository.GetClassByName(className);
     }
 }

@@ -6,19 +6,19 @@ public class Airport
     private string _name;
     private string _country;
 
-    public string id
+    public string Id
     {
         get => _id;
         set => _id = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    public string name
+    public string Name
     {
         get => _name;
         set => _name = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    public string country
+    public string Country
     {
         get => _country;
         set => _country = value ?? throw new ArgumentNullException(nameof(value));
@@ -26,6 +26,6 @@ public class Airport
 
     public override string? ToString()
     {
-        return $"Airport id = {id}, Country Name = {country}, Airport Name = {name} ";
+        return $"Airport id = {Id}, Country Name = {Country}, Airport Name = {Name} ";
     }
 }

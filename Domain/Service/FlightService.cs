@@ -1,3 +1,4 @@
+using System.Collections;
 using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
@@ -36,67 +37,98 @@ public sealed class FlightService : IFlightService
         return _flightRepository.FindById(id);
     }
 
-    public IEnumerable<dynamic> FindFlightById(IEnumerable<ClassFlightRelation> flightRs, IEnumerable<FlightClass> classes)
+    public IEnumerable<FlightDetails> FindFlightByDepartureCountry(string country)
     {
-        return _flightRepository.FindById(flightRs, classes);
+        var airports = _airportService.FindAirportByCountry(country);
+
+        var flights = _flightRepository.GetFlightByDepartureAirport(airports);
+        CheckListIfEmpty(flights, $"No Flights Arrives at {country}");
+
+        var fullDetails = FindFullFlightDetails(flights);
+
+        return fullDetails;
     }
 
-    public IEnumerable<Flight> FindFlightByDepartureCountry(string country)
+    public IEnumerable<FlightDetails> FindFlightByArrivalCountry(string country)
     {
-            var airports = _airportService.FindAirportByCountry(country).ToList();
+        var airports = _airportService.FindAirportByCountry(country);
 
-            if (airports.Capacity == 0)
-                throw new EmptyQueryResultException($"No Such Airport in {country}");
+        var flights = _flightRepository.GetFlightByArrivalAirport(airports);
+        CheckListIfEmpty(flights, $"No Flights Arrives at {country}");
 
-            var flights = _flightRepository.GetFlightByDepartureAirport(airports);
-            if (flights.ToList().Count == 0)
-                throw new EmptyQueryResultException($"No Flights Departure From {country}");
+        var fullDetails = FindFullFlightDetails(flights);
 
-            return flights;
+        return fullDetails;
     }
 
-    public IEnumerable<Flight> FindFlightByArrivalCountry(string country)
-    {
-        return HandleUserInput<EmptyQueryResultException, IEnumerable<Flight>>(() =>
-        {
-            var airports = _airportService.FindAirportByCountry(country);
-            if (airports.ToList().Capacity == 0)
-                throw new EmptyQueryResultException($"No Such Airport in {country}");
-
-            var flights = _flightRepository.GetFlightByArrivalAirport(airports);
-            if (flights.ToList().Capacity == 0)
-                throw new EmptyQueryResultException($"No Flights Arrives at {country}");
-
-            return flights;
-        });
-    }
-
-    public IEnumerable<Flight?> FindFlightByArrivalAirport(string name)
+    public IEnumerable<FlightDetails> FindFlightByArrivalAirport(string name)
     {
         var airports = _airportService.FindAirportByName(name);
-        return _flightRepository.GetFlightByArrivalAirport(airports);
+        var flights = _flightRepository.GetFlightByArrivalAirport(airports);
+        CheckListIfEmpty(flights, $"Cannot Find Flights Arrives At {name}");
+        var fullDetails = FindFullFlightDetails(flights);
+
+        return fullDetails;
     }
 
-    public IEnumerable<Flight?> FindFlightByDepartureAirport(string name)
+    public IEnumerable<FlightDetails> FindFlightByDepartureAirport(string name)
     {
-        var airports = _airportService.FindAirportByName(name);
-        return _flightRepository.GetFlightByDepartureAirport(airports);
+        var departureAirports = _airportService.FindAirportByName(name);
+        var flights = _flightRepository.GetFlightByDepartureAirport(departureAirports);
+        CheckListIfEmpty(flights, $"No Available Flights Departures from {name}");
+
+        return FindFullFlightDetails(flights);
     }
 
-    public IEnumerable<dynamic> FindFlightsByPrice(float minPrice, float maxPrice)
+    public IEnumerable<FlightDetails> FindFlightsByPrice(float minPrice, float maxPrice)
     {
-        return HandleUserInput<EmptyQueryResultException, IEnumerable<dynamic>>(() =>
-        {
-            var flightRs = _rClassFlightService.FindFlightsByPrice(minPrice, maxPrice);
-            if (flightRs.ToList().Capacity == 0)
-                throw new EmptyQueryResultException($"No Flights with Price Range [{minPrice},{maxPrice}]");
+        var flightRs = _rClassFlightService.FindFlightsByPrice(minPrice, maxPrice);
+        CheckListIfEmpty(flightRs, $"No Flights with Price Range [{minPrice},{maxPrice}]");
 
-            var classes = _flightClassService.GetClassesById(flightRs);
-            var flights = _flightRepository.FindById(flightRs, classes);
-            if (flights.ToList().Capacity == 0)
-                throw new EmptyQueryResultException($"No Flights Available");
+        return FindFullFlightDetails(flightRs);
+    }
 
-            return flights;
-        });
+    public IEnumerable<FlightDetails> FindFlightByClass(string className)
+    {
+        var classf = _flightClassService.GetClassByName(className);
+        var relations = _rClassFlightService.FindFlightsByClassId(classf.Id);
+        var flightsClasses = _flightRepository.GetFlightByClass(relations);
+        CheckListIfEmpty(flightsClasses, $"No Such Flights With Class {className}");
+
+        var flights = _flightRepository.GetFlightsByRelations(flightsClasses);
+        CheckListIfEmpty(flights, $"No Such Flights With Class {className}");
+
+        IEnumerable<FlightClass> classes = new List<FlightClass> {classf};
+        return FindFullFlightDetails(flights, classes);
+    }
+
+    public IEnumerable<FlightDetails> FindFullFlightDetails(
+        IEnumerable<ClassFlightRelation> classFlightRelations)
+    {
+        var flights = _flightRepository.GetAllFlights();
+        CheckListIfEmpty(flights, $"No Available Flights");
+
+        var flightsInfo = _airportService.GetFlightsInfo(flights);
+        var allClasses = _flightClassService.GetAllClasses();
+        var flightsDetails = _rClassFlightService.FindFlightClassesAndPrice(flightsInfo, allClasses,
+            classFlightRelations);
+        return flightsDetails;
+    }
+
+    public IEnumerable<FlightDetails> FindFullFlightDetails(IEnumerable<Flight> flights, IEnumerable<FlightClass> classes)
+    {
+        var flightsInfo = _airportService.GetFlightsInfo(flights);
+        var relations = _rClassFlightService.FindAllRelations();
+        var flightsDetails = _rClassFlightService.FindFlightClassesAndPrice(flightsInfo, classes, relations);
+        return flightsDetails;
+    }
+
+    public IEnumerable<FlightDetails> FindFullFlightDetails(IEnumerable<Flight> flights)
+    {
+        var flightsInfo = _airportService.GetFlightsInfo(flights);
+        var allClasses = _flightClassService.GetAllClasses();
+        var relations = _rClassFlightService.FindAllRelations();
+        var flightsDetails = _rClassFlightService.FindFlightClassesAndPrice(flightsInfo, allClasses, relations);
+        return flightsDetails;
     }
 }

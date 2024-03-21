@@ -11,4 +11,6 @@ public interface IAirportRepository
     public Airport Update(Airport newAirport, string id);
     public IEnumerable<Airport> GetAirportByCountry(string country);
     public IEnumerable<Airport> GetAirportByName(string name);
+    public IEnumerable<FlightInfo> GetFlightInfos(IEnumerable<Flight> flights);
+
 }

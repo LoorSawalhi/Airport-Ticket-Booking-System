@@ -8,12 +8,10 @@ public interface IFlightService
 {
     public Flight? FindFlightById(string id);
 
-    public IEnumerable<dynamic> FindFlightById(IEnumerable<ClassFlightRelation> flightRs,
-        IEnumerable<FlightClass> classes);
-
-    public IEnumerable<Flight> FindFlightByDepartureCountry(string country);
-    public IEnumerable<Flight> FindFlightByArrivalCountry(string country);
-    public IEnumerable<Flight?> FindFlightByArrivalAirport(string name);
-    public IEnumerable<Flight?> FindFlightByDepartureAirport(string name);
-    public IEnumerable<dynamic> FindFlightsByPrice(float minPrice, float maxPrice);
+    public IEnumerable<FlightDetails> FindFlightByDepartureCountry(string country);
+    public IEnumerable<FlightDetails> FindFlightByArrivalCountry(string country);
+    public IEnumerable<FlightDetails> FindFlightByArrivalAirport(string name);
+    public IEnumerable<FlightDetails> FindFlightByDepartureAirport(string name);
+    public IEnumerable<FlightDetails> FindFlightsByPrice(float minPrice, float maxPrice);
+    public IEnumerable<FlightDetails> FindFlightByClass(string className);
 }

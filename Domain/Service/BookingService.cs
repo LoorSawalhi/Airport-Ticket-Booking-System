@@ -1,27 +1,24 @@
+using Domain.CustomException;
+using Domain.Models;
 using Domain.Repository;
 using Domain.Service_Interface;
+using static Domain.InputHandling;
 
 namespace Domain.Service;
 
-public class BookingService : IBookingService
+public sealed class BookingService(IFlightRepository flightRepository, IBookingRepository bookingRepository)
+    : IBookingService
 {
-    private readonly IFlightRepository _flightRepository;
-    private readonly IBookingRepository _bookingRepository;
-
-    public BookingService(IFlightRepository flightRepository, IBookingRepository bookingRepository)
-    {
-        _flightRepository = flightRepository;
-        _bookingRepository = bookingRepository;
-    }
+    private readonly IFlightRepository _flightRepository = flightRepository;
+    private readonly IBookingRepository _bookingRepository = bookingRepository;
 
     public void CreateBooking(string flightId, string passengerId, string flightClass)
     {
-        var flight = _flightRepository.FindById(flightId);
-
-        if (flight == null)
-        {
-            throw new Exception("Flight not found.");
-        }
+        // var flight = _flightRepository.FindById(flightId);
+        // if (flight == null)
+        // {
+        //     throw new EmptyQueryResultException("Flight not found.");
+        // }
 
         // var fClass = flight.Classes.FirstOrDefault(c => c.name.Equals(flightClass, StringComparison.InvariantCultureIgnoreCase));
         //

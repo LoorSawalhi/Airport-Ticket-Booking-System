@@ -1,6 +1,7 @@
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
 
@@ -21,9 +22,10 @@ public sealed class PassengerRepository(string fileName) : IPassengerRepository
         return records.ToList();
     }
 
-    public Passenger? FindById(string id)
+    public Passenger FindById(string id)
     {
-        return GetAllPassengers().FirstOrDefault(passenger => passenger?.id == id);
+        return GetAllPassengers().FirstOrDefault(passenger => passenger?.id == id) ??
+               throw new EmptyQueryResultException($"No Such Passenger With THis ID {id}");
     }
 
     public void Add(Passenger passenger)

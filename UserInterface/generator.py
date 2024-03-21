@@ -53,23 +53,23 @@ for i in range(num_flights):
     flights.append(flight)
     
 # Generating classes data
-for i in range(1,3):
+for i in range(1,4):
     fclass = {
         "Id": i,
-        "Class": ClassType(i),
-        "MaxPrice": random.randint(10, 50)*i,
-        "MinPrice": random.randint(60, 100)*i,
+        "Name": ClassType(i),
+        "MaxPrice": random.randint(60, 100)*(i + 1),
+        "MinPrice": random.randint(10, 50)*(i + 1),
         "MaxSeat": random.randint(10, 50)*i
     }
     classes.append(fclass)
     
 # Generating flight classes data
 for i in range(num_flights):
-    for j in range(1,3):
+    for j in range(1,4):
         fclass = {
             "FlightId": flights[i]['Id'],
             "ClassId": j,
-            "Price": i
+            "Price": random.randint(classes[j-1]["MinPrice"], classes[j-1]["MaxPrice"])
 #             "Price": random.randint(classes[j-1]["MinPrice"], classes[j-1]["MaxPrice"])
         }
         flight_classes.append(fclass)
@@ -84,10 +84,10 @@ for i in range(num_passengers):
     
     
 # Generating booking data
-for _ in range(num_bookings):
+for i in range(num_bookings):
     flight = random.choice(flights)
     booking = {
-        "Id": str(fake.uuid4()),
+        "Id": i + 1,
         "FlightId": random.choice(flights)["Id"],
         "ClassId": random.choice(classes)["Id"],
         "PassengerId": random.choice(passengers)["ID"]
@@ -109,7 +109,7 @@ flight_fields = [
 booking_fields = ["Id",  "FlightId", "ClassId", "PassengerId"]  # Changed "ClassType" to "ClassId"
 class_flight_fields = ["FlightId", "ClassId", "Price"]
 airport_fields = ["Id", "Name", "Country"]
-class_fields = ["Id","Class","MaxPrice","MinPrice","MaxSeat"]
+class_fields = ["Id","Name","MaxPrice","MinPrice","MaxSeat"]
 
 
 # Writing to csv files
