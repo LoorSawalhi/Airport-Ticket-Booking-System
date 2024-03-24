@@ -22,10 +22,9 @@ public sealed class PassengerRepository(string fileName) : IPassengerRepository
         return records.ToList();
     }
 
-    public Passenger FindById(string id)
+    public Passenger? FindById(string id)
     {
-        return GetAllPassengers().FirstOrDefault(passenger => passenger?.id == id) ??
-               throw new EmptyQueryResultException($"No Such Passenger With THis ID {id}");
+        return GetAllPassengers().FirstOrDefault(passenger => passenger?.id == id);
     }
 
     public void Add(Passenger passenger)

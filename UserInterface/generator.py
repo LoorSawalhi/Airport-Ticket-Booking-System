@@ -87,7 +87,6 @@ for i in range(num_passengers):
 for i in range(num_bookings):
     flight = random.choice(flights)
     booking = {
-        "Id": i + 1,
         "FlightId": random.choice(flights)["Id"],
         "ClassId": random.choice(classes)["Id"],
         "PassengerId": random.choice(passengers)["ID"]
@@ -106,7 +105,7 @@ def save_to_csv(data, fieldnames, filename):
 flight_fields = [
     "Id","DepartureDate", "DepartureAirport", "ArrivalAirport"
 ]
-booking_fields = ["Id",  "FlightId", "ClassId", "PassengerId"]  # Changed "ClassType" to "ClassId"
+booking_fields = ["FlightId", "ClassId", "PassengerId"]  # Changed "ClassType" to "ClassId"
 class_flight_fields = ["FlightId", "ClassId", "Price"]
 airport_fields = ["Id", "Name", "Country"]
 class_fields = ["Id","Name","MaxPrice","MinPrice","MaxSeat"]

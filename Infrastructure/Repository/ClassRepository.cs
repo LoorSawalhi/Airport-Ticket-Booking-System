@@ -38,6 +38,12 @@ public sealed class ClassRepository(string fileName) : IClassRepository
                ?? throw new EmptyQueryResultException($"No Such Class Named {className}");
     }
 
+    public int GetMaxSeats(string className)
+    {
+        return GetAllClasses().FirstOrDefault(classF =>
+            classF.Name.Equals(className, StringComparison.InvariantCultureIgnoreCase))?.MaxSeat ?? 0;
+    }
+
     public FlightClass FindById(string id)
     {
         return GetAllClasses().FirstOrDefault(fClass => fClass?.Id == id) ??

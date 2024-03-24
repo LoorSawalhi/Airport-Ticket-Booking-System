@@ -1,3 +1,4 @@
+using Domain;
 using Domain.CustomException;
 using Domain.Models;
 using Domain.Service;
@@ -8,28 +9,33 @@ namespace UserInterface.Controller;
 
 using static Utilities;
 
-internal sealed class FlightController
+public sealed class FlightController
 {
     private readonly IFlightService _flightService;
     private readonly IRClassFlightService _rClassFlightService;
     private readonly IFlightClassService _flightClassService;
+    private readonly SearchState _state;
 
     private static Domain.Models.Passenger _passenger;
     private static int _inputLine;
+    private SearchState _searchState = SearchState.All;
 
-    public FlightController(IFlightService flightService, IRClassFlightService rClassFlightService, IFlightClassService flightClassService, Domain.Models.Passenger passenger)
+    public FlightController(IFlightService flightService, IRClassFlightService rClassFlightService,
+        IFlightClassService flightClassService, Domain.Models.Passenger passenger, SearchState state)
     {
         _flightService = flightService;
         _rClassFlightService = rClassFlightService;
         _flightClassService = flightClassService;
         _passenger = passenger;
+        _state = state;
     }
 
-    public IEnumerable<FlightDetails> SearchFlights()
+    public IEnumerable<FlightDetails> SearchFlights(bool booking)
     {
         var flights = HandleUserInput<NotValidUserInputException, EmptyQueryResultException,
             IEnumerable<FlightDetails>>(() =>
         {
+            _searchState = booking ? SearchState.Available : SearchState.All;
             Console.Write("""
                           Search a Flight By :
                           1) Departure Country
@@ -50,31 +56,31 @@ internal sealed class FlightController
             {
                 case 1:
                     readString = ReadString("Enter departure country : ");
-                    data = _flightService.FindFlightByDepartureCountry(readString);
+                    data = _flightService.FindFlightByDepartureCountry(readString, _searchState);
                     break;
                 case 2:
                     readString = ReadString("Enter arrival country : ");
-                    data = _flightService.FindFlightByArrivalCountry(readString);
+                    data = _flightService.FindFlightByArrivalCountry(readString, _searchState);
                     break;
                 case 3:
                     price = ReadPrice("Enter price : "); //Price (Under a number)
-                    data = _flightService.FindFlightsByPrice(0, price);
+                    data = _flightService.FindFlightsByPrice(0, price, _searchState);
                     break;
                 case 4:
                     price = ReadPrice("Enter price : "); //Price (Above a number)
-                    data = _flightService.FindFlightsByPrice(price, float.MaxValue);
+                    data = _flightService.FindFlightsByPrice(price, float.MaxValue, _searchState);
                     break;
                 case 5:
                     readString = ReadString("Enter departure airport : ");
-                    data = _flightService.FindFlightByDepartureAirport(readString);
+                    data = _flightService.FindFlightByDepartureAirport(readString, _searchState);
                     break;
                 case 6:
                     readString = ReadString("Enter arrival airport : ");
-                    data = _flightService.FindFlightByArrivalAirport(readString);
+                    data = _flightService.FindFlightByArrivalAirport(readString, _searchState);
                     break;
                 case 7:
                     readString = ReadString("Enter flight class : ");
-                    data = _flightService.FindFlightByClass(readString);
+                    data = _flightService.FindFlightByClass(readString, _searchState);
                     break;
                 default:
                     throw new NotValidUserInputException(InvalidOption);
@@ -93,24 +99,5 @@ internal sealed class FlightController
 
         Console.WriteLine();
         return flights;
-    }
-
-    public void BookingList()
-    {
-        HandleUserInput<NotValidFlightIdException>(() =>
-        {
-            Console.WriteLine("""
-                              To Book a Flight You Must Search One : 
-                              
-                              """);
-            var flights = SearchFlights();
-            var flightId = ReadString("Choose a Flight By Id : ");
-            var flight = flights.FirstOrDefault(f => f.id.Equals(flightId));
-            if (flight == null)
-                throw new NotValidFlightIdException("Wrong Flight Id !!");
-
-            Console.WriteLine(flight);
-            throw new BreakLoopException();
-        });
     }
 }

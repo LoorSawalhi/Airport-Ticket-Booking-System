@@ -1,3 +1,4 @@
+using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
 using Domain.Service_Interface;
@@ -8,7 +9,8 @@ public sealed class PassengerService(IPassengerRepository passengerRepository) :
 {
     public Passenger FindPassengerById(string id)
         {
-            return passengerRepository.FindById(id)!;
+            return passengerRepository.FindById(id) ??
+                   throw new EmptyQueryResultException($"No Such Passenger With This ID {id}");
         }
 
         // public void CreateFlight(FlightData data)

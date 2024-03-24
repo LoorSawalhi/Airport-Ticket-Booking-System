@@ -1,6 +1,7 @@
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Domain;
 using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
@@ -22,24 +23,36 @@ public sealed class FlightRepository(string fileName) : IFlightRepository
         return records.ToList();
     }
 
+    public IEnumerable<Flight?> GetAllFlights(SearchState state, IEnumerable<ClassFlightRelation> availableFlights)
+    {
+        var allFlights = GetAllFlights();
+        var availables = from flight in allFlights
+            join availableFlight in availableFlights
+                on flight.Id equals availableFlight.FlightId
+            select flight;
+        return availables;
+    }
+
     public Flight FindById(string id)
     {
         return GetAllFlights().FirstOrDefault(flight => flight?.Id == id) ??
                throw new EmptyQueryResultException($"No Flights With Such ID {id}");
     }
 
-    public IEnumerable<Flight> GetFlightsByRelations(IEnumerable<ClassFlightRelation> relations)
+    public IEnumerable<Flight> GetFlightsByRelations(IEnumerable<ClassFlightRelation> relations, SearchState state,
+        IEnumerable<ClassFlightRelation> availableFlights)
     {
-        var flights = GetAllFlights();
+        var flights = state == SearchState.All ? GetAllFlights() : GetAllFlights(state, availableFlights);
         return from flight in flights
             join relation in relations
                 on flight.Id equals relation.FlightId
             select flight;
     }
 
-    public IEnumerable<Flight> GetFlightByDepartureAirport(IEnumerable<Airport?> departureAirports)
+    public IEnumerable<Flight> GetFlightByDepartureAirport(IEnumerable<Airport?> departureAirports, SearchState state,
+        IEnumerable<ClassFlightRelation> availableFlights)
     {
-        var flights = GetAllFlights();
+        var flights = state == SearchState.All ? GetAllFlights() : GetAllFlights(state, availableFlights);
 
         return from flight in flights
             join airport in departureAirports
@@ -47,36 +60,23 @@ public sealed class FlightRepository(string fileName) : IFlightRepository
                 select flight;
     }
 
-    public IEnumerable<Flight> GetFlightByArrivalAirport(IEnumerable<Airport?> airports)
+    public IEnumerable<Flight> GetFlightByArrivalAirport(IEnumerable<Airport?> airports, SearchState state,
+        IEnumerable<ClassFlightRelation> availableFlights)
     {
-        var flights = GetAllFlights();
+        var flights = state == SearchState.All ? GetAllFlights() : GetAllFlights(state, availableFlights);
         return from flight in flights
             join airport in airports
                 on flight.ArrivalAirport equals airport.Id
             select flight;
     }
 
-    public IEnumerable<ClassFlightRelation> GetFlightByClass(IEnumerable<ClassFlightRelation> relations)
+    public IEnumerable<ClassFlightRelation> GetFlightByClass(IEnumerable<ClassFlightRelation> relations, SearchState state,
+        IEnumerable<ClassFlightRelation> availableFlights)
     {
-        var flights = GetAllFlights();
+        var flights = state == SearchState.All ? GetAllFlights() : GetAllFlights(state, availableFlights);
         return from flight in flights
             join relation in relations
                 on flight.Id equals relation.FlightId
             select relation;
-    }
-
-    public void Add(Flight flight)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Delete(Flight flight)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Flight Update(Flight newFlight, string id)
-    {
-        throw new NotImplementedException();
     }
 }

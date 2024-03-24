@@ -14,14 +14,14 @@ public sealed class AirportService(IAirportRepository airportRepository) : IAirp
 
     public IEnumerable<FlightInfo> GetFlightsInfo(IEnumerable<Flight> flights)
     {
-        var flightsInfo = airportRepository.GetFlightInfos(flights);
+        var flightsInfo = airportRepository.GetFlightInfos(flights).ToList();
         CheckListIfEmpty(flightsInfo, $"No Available Infos For Such Flights");
         return flightsInfo;
     }
 
     public IEnumerable<Airport> FindAirportByCountry(string country)
     {
-        var airports = airportRepository.GetAirportByCountry(country);
+        var airports = airportRepository.GetAirportByCountry(country).ToList();
 
         CheckListIfEmpty(airports, $"No Such Airport in {country}");
         return airports;
@@ -29,14 +29,14 @@ public sealed class AirportService(IAirportRepository airportRepository) : IAirp
 
     public IEnumerable<Airport> GetAllAirports()
     {
-        var airports = airportRepository.GetAllAirports();
+        var airports = airportRepository.GetAllAirports().ToList();
         CheckListIfEmpty(airports, "No Available Airports");
         return airports;
     }
 
     public IEnumerable<Airport> FindAirportByName(string name)
     {
-        var airports = airportRepository.GetAirportByName(name);
+        var airports = airportRepository.GetAirportByName(name).ToList();
         CheckListIfEmpty(airports, "No Available Airports");
         return airports;
     }

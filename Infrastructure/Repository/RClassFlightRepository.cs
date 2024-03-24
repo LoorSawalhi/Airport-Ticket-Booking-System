@@ -45,21 +45,6 @@ public sealed class RClassFlightRepository(string fileName) : IRClassFlightRepos
         return GetAllFlightsClasses().Where(flight => flight.ClassId.Equals(classId));
     }
 
-    public void Add(ClassFlightRelation flightClass)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Delete(ClassFlightRelation flightClass)
-    {
-        throw new NotImplementedException();
-    }
-
-    public ClassFlightRelation Update(ClassFlightRelation newClass, string id)
-    {
-        throw new NotImplementedException();
-    }
-
     public IEnumerable<ClassFlightRelation?> GetFlightByPrice(float minPrice, float maxPrice)
     {
         return GetAllFlightsClasses().Where(flight => (flight.Price >= minPrice && flight.Price <= maxPrice));
@@ -75,5 +60,20 @@ public sealed class RClassFlightRepository(string fileName) : IRClassFlightRepos
                 on flightR.ClassId equals classInfo.Id
             select new FlightDetails(flight.Id, flight.DepartureDate, flight.DepartureAirportName,
                 flight.ArrivalAirportName, classInfo.Name, flightR.Price);
+    }
+
+    public void Add(ClassFlightRelation flightClass)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Delete(ClassFlightRelation flightClass)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ClassFlightRelation Update(ClassFlightRelation newClass, string id)
+    {
+        throw new NotImplementedException();
     }
 }
