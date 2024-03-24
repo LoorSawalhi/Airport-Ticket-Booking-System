@@ -9,37 +9,90 @@ namespace Infrastructre.Repository;
 
 public sealed class BookingRepository(string fileName) : IBookingRepository
 {
+    CsvConfiguration _config = new CsvConfiguration(CultureInfo.InvariantCulture)
+    {
+        HasHeaderRecord = true,
+        HeaderValidated = null,
+        MissingFieldFound = null
+    };
+
     public IEnumerable<Booking> GetAllBookings()
     {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            HasHeaderRecord = true,
-            HeaderValidated = null,
-        };
         using var reader = new StreamReader(fileName);
-        using var csv = new CsvReader(reader, config);
+        using var csv = new CsvReader(reader, _config);
         var records = csv.GetRecords<Booking>();
         return records.ToList();
     }
 
-    public Booking FindById(string id)
+    public void AddNewBooking(string flightId, string passengerId, string flightClass)
     {
-        return GetAllBookings().FirstOrDefault(booking => booking?.Id == id) ??
-               throw new EmptyQueryResultException($"No Booking With Such ID {id}");
+        var booking = new Booking(flightId, passengerId, flightClass);
+
+        using var stream = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.None);
+        using var writer = new StreamWriter(stream);
+        using var csv = new CsvWriter(writer, _config);
+
+        csv.WriteRecord(booking);
+        csv.NextRecord();
     }
 
-    public void Add(Booking booking)
+    public IEnumerable<ClassFlightRelation> GetAvailableFlights(IEnumerable<FlightClass> classes)
     {
-        throw new NotImplementedException();
+        Func<dynamic, dynamic> selector;
+        var allBookings = GetAllBookings();
+        var flights = from booking in allBookings
+            group booking by new { booking.FlightId, booking.ClassId }
+            into grouped
+            select new
+            {
+                FlightId = grouped.Key.FlightId,
+                ClassId = grouped.Key.ClassId,
+                Count = grouped.Count()
+            };
+
+        var availableFlights = from flight in flights
+            join classf in classes
+                on flight.ClassId equals classf.Id
+            where flight.Count < classf.MaxSeat
+            select new ClassFlightRelation(flight.FlightId, flight.ClassId, 0);
+
+        return availableFlights;
     }
 
-    public void Delete(Booking booking)
+    public IEnumerable<Booking> GetBookingsById(string passengerId)
     {
-        throw new NotImplementedException();
+        var bookings = GetAllBookings();
+        return from booking in bookings
+            where booking.PassengerId == passengerId
+            select booking;
     }
 
-    public Booking Update(Booking newBooking, string id)
+    public void DeleteBooking(Booking booking)
     {
-        throw new NotImplementedException();
+        var allBookings = GetAllBookings().ToList();
+        var bookingToBeDeleted = allBookings.FirstOrDefault(bookings => (booking.ClassId == bookings.ClassId &&
+                                                            booking.FlightId == bookings.FlightId &&
+                                                            booking.PassengerId == bookings.PassengerId));
+
+        if (bookingToBeDeleted == null)
+            throw new EmptyQueryResultException("Booking Cannot Be Found!!");
+
+        allBookings.Remove(bookingToBeDeleted);
+        WriteBookings(allBookings);
+    }
+
+    private void WriteBookings(IEnumerable<Booking> bookings)
+    {
+        using var writer = new StreamWriter(fileName);
+        using var csv = new CsvWriter(writer, _config);
+        csv.WriteRecords(bookings);
+    }
+
+
+    public int GetBookingsCount(string flightId, string classId)
+    {
+        return GetAllBookings().Count(booking =>
+            (booking.ClassId.Equals(classId, StringComparison.InvariantCultureIgnoreCase)
+             && booking.FlightId.Equals(flightId, StringComparison.InvariantCultureIgnoreCase)));
     }
 }

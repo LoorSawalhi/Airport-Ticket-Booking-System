@@ -1,3 +1,4 @@
+using Domain;
 using Infrastructre.Repository;
 using UserInterface.Controller;
 using Domain.Service;
@@ -13,6 +14,8 @@ namespace UserInterface;
 internal class Passenger
 {
     private const string InvalidPassenger = "No Available Passenger with This ID";
+    private const int cancelBooking = 3;
+    private const int modifyBooking = 4;
     private static int _inputLine;
     public static IAirportService AirportService;
     public static IFlightService FlightService;
@@ -21,6 +24,7 @@ internal class Passenger
     public static IBookingService BookingService;
 
     public static FlightController flightController;
+    public static BookingController bookingController;
 
     public static Domain.Models.Passenger? passenger;
 
@@ -41,10 +45,9 @@ internal class Passenger
             if (userId != null)
             {
                 passenger = passengerService.FindPassengerById(userId);
-                if (passenger == null)
-                    throw new NoAvailablePassengerException(InvalidPassenger);
 
-                flightController = new FlightController(FlightService, RClassFlightService, FlightClassService, passenger);
+                flightController = new FlightController(FlightService, RClassFlightService, FlightClassService, passenger, SearchState.Available);
+                bookingController = new BookingController(flightController, BookingService, FlightClassService, RClassFlightService, passenger);
                 PassengerOptions();
             }
             else
@@ -71,7 +74,7 @@ internal class Passenger
 
     private static void PassengerOptions()
     {
-        HandleUserInput<NotValidUserInputException>(() =>
+        HandleUserInput<NotValidUserInputException, EmptyQueryResultException>(() =>
         {
             Console.Write("""
                           Welcome Again !! Here are your options
@@ -96,22 +99,22 @@ internal class Passenger
         switch (option)
         {
             case bookFlight:
-                flightController.BookingList();
+                bookingController.BookingList();
                 break;
             case searchFlight:
-                flightController.SearchFlights();
+                flightController.SearchFlights(false);
                 break;
-            case 3:
-                //Cancel Your Bookings
+            case cancelBooking:
+                bookingController.CancelBookings();
                 break;
-            case 4:
-                //Modify Your Booking
+            case modifyBooking:
+                bookingController.ModifyBookings();
                 break;
             case 5:
-                //View Personal Bookings
+                bookingController.ListBookings();
                 break;
             case 6:
-                //Log out
+                Utilities.Menu();
                 break;
             default:
                 throw new NotValidUserInputException(InvalidOption);

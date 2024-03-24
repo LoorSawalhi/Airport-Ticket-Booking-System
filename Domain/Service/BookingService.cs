@@ -6,33 +6,55 @@ using static Domain.InputHandling;
 
 namespace Domain.Service;
 
-public sealed class BookingService(IFlightRepository flightRepository, IBookingRepository bookingRepository)
+public sealed class BookingService(
+    IPassengerService passengerService,
+    IFlightClassService flightClassService,
+    IBookingRepository bookingRepository)
     : IBookingService
 {
-    private readonly IFlightRepository _flightRepository = flightRepository;
-    private readonly IBookingRepository _bookingRepository = bookingRepository;
-
-    public void CreateBooking(string flightId, string passengerId, string flightClass)
+    public void CreateBooking(FlightDetails flight, string passengerId)
     {
-        // var flight = _flightRepository.FindById(flightId);
-        // if (flight == null)
-        // {
-        //     throw new EmptyQueryResultException("Flight not found.");
-        // }
+        var maxSeats = flightClassService.GetClassMaxSeats(flight.flightClass);
+        var classId = flightClassService.GetClassByName(flight.flightClass);
+        var capacity = GetClassCurrentSeats(classId.Id, flight.id);
 
-        // var fClass = flight.Classes.FirstOrDefault(c => c.name.Equals(flightClass, StringComparison.InvariantCultureIgnoreCase));
-        //
-        // if (fClass == null)
-        //     throw new Exception("Flight not found.");
-        //
-        // if (!fClass.IsSeatAvailable())
-        // {
-        //     throw new Exception("Seat is not available.");
-        // }
-        //
-        // var booking = new Booking(flightId, passengerId, fClass.id);
-        // flight.BookSeat(seatNumber);
-        // _flightRepository.Save(flight);
-        // _bookingRepository.SaveBooking(booking);
+        if (capacity >= maxSeats)
+            throw new EmptyQueryResultException("No Available Seats");
+
+        bookingRepository.AddNewBooking(flight.id, passengerId, classId.Id);
+    }
+
+    public int GetClassCurrentSeats(string classId, string flightId)
+    {
+        return bookingRepository.GetBookingsCount(flightId, classId);
+    }
+
+    public bool IsFlightAvailable(string flightId, string classId)
+    {
+        var maxSeats = flightClassService.GetClassMaxSeats(classId);
+        var capacity = GetClassCurrentSeats(classId, flightId);
+
+        return capacity < maxSeats;
+    }
+
+    public IEnumerable<ClassFlightRelation> GetAvailableFlights()
+    {
+        var classes = flightClassService.GetAllClasses();
+        var availableFlights = bookingRepository.GetAvailableFlights(classes).ToList();
+        CheckListIfEmpty(availableFlights, $"No Available Flights");
+        return availableFlights;
+    }
+
+    public IEnumerable<Booking> GetAllBookings(string passengerId)
+    {
+        var bookings = bookingRepository.GetBookingsById(passengerId).ToList();
+        CheckListIfEmpty(bookings, $"Passenger {passengerId} Has No Bookings!");
+        return bookings;
+    }
+
+    public void CancelBooking(Booking booking)
+    {
+         bookingRepository.DeleteBooking(booking);
+         Console.WriteLine($"{booking} Was Canceled Successfully");
     }
 }
