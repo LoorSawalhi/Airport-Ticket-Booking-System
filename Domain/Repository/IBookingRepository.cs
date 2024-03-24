@@ -5,8 +5,9 @@ namespace Domain.Repository;
 public interface IBookingRepository
 {
     public IEnumerable<Booking> GetAllBookings();
-    public Booking FindById(string id);
-    public void Add(Booking booking);
-    public void Delete(Booking booking);
-    public Booking Update(Booking newBooking, string id);
+    public int GetBookingsCount(string flightId, string classId);
+    public void AddNewBooking(string flightId, string passengerId, string flightClass);
+    public IEnumerable<ClassFlightRelation> GetAvailableFlights(IEnumerable<FlightClass> classes);
+    public IEnumerable<Booking> GetBookingsById(string passengerId);
+    public void DeleteBooking(Booking booking);
 }
