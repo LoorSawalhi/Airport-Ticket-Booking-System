@@ -61,7 +61,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.AirportTicketBookingSystem.executor": "Debug",
+    ".NET Project.AirportTicketBookingSystem.executor": "Run",
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -146,7 +146,7 @@
       <workItem from="1711004868504" duration="17467000" />
       <workItem from="1711132727437" duration="332000" />
       <workItem from="1711264839707" duration="19250000" />
-      <workItem from="1711350628926" duration="6505000" />
+      <workItem from="1711350628926" duration="7405000" />
     </task>
     <servers />
   </component>

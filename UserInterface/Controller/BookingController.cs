@@ -17,7 +17,7 @@ internal sealed class BookingController(
     private static int _inputLine;
     private string _passengerId = "";
 
-    public IEnumerable<FlightDetails> FilterBookings()
+    public IEnumerable<BookingDetails> FilterBookings()
     {
         var flights = HandleUserInput<NotValidUserInputException, EmptyQueryResultException,
             IEnumerable<FlightDetails>>(() =>

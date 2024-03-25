@@ -77,14 +77,14 @@ public sealed class BookingService(
         bookingRepository.DeleteBooking(booking);
     }
 
-    public IEnumerable<FlightDetails> FindBookings(IEnumerable<FlightDetails> flights)
+    public IEnumerable<BookingDetails> FindBookings(IEnumerable<FlightDetails> flights)
     {
         var filteredFlights = bookingRepository.FilterFlightsByBookings(flights).ToList();
         CheckListIfEmpty(filteredFlights, $"No Available Bookings");
         return filteredFlights;
     }
 
-    public IEnumerable<FlightDetails> FindBookings(IEnumerable<FlightDetails> flights, string passengerId)
+    public IEnumerable<BookingDetails> FindBookings(IEnumerable<FlightDetails> flights, string passengerId)
     {
         var filteredFlights = bookingRepository.FilterFlightsByPassengerId(flights, passengerId).ToList();
         CheckListIfEmpty(filteredFlights, $"No Available Bookings for Passenger {passengerId}");

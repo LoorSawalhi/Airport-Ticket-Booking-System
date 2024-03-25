@@ -15,7 +15,7 @@ public interface IBookingService
     public IEnumerable<Booking> GetAllBookings(string passengerId);
     public void CancelBooking(Booking booking);
     public void RemoveBooking(Booking booking);
-    public IEnumerable<FlightDetails> FindBookings(IEnumerable<FlightDetails> flights);
-    public IEnumerable<FlightDetails> FindBookings(IEnumerable<FlightDetails> flights, string passengerId);
+    public IEnumerable<BookingDetails> FindBookings(IEnumerable<FlightDetails> flights);
+    public IEnumerable<BookingDetails> FindBookings(IEnumerable<FlightDetails> flights, string passengerId);
 
 }
