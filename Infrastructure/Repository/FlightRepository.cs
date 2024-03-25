@@ -79,4 +79,10 @@ public sealed class FlightRepository(string fileName) : IFlightRepository
                 on flight.Id equals relation.FlightId
             select relation;
     }
+
+    public IEnumerable<Flight> GetFlightByDate(DateTime date)
+    {
+        var flights = GetAllFlights();
+        return flights.Where(flight => flight.DepartureDate.Equals(date));
+    }
 }

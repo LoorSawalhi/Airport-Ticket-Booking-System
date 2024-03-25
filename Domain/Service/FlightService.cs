@@ -102,6 +102,14 @@ public sealed class FlightService(
         return FindFullFlightDetails(flights, classes);
     }
 
+    public IEnumerable<FlightDetails> FindFlightByDate(DateTime date)
+    {
+        var flights = flightRepository.GetFlightByDate(date).ToList();
+        CheckListIfEmpty(flights, $"No Such Flights With Date {date}");
+
+        return FindFullFlightDetails(flights);
+    }
+
     public IEnumerable<FlightDetails> FindFlights(IEnumerable<ClassFlightRelation> flightsClasses)
     {
         flightsClasses = flightsClasses.ToList();

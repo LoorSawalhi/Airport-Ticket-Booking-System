@@ -135,6 +135,11 @@ internal sealed class FlightController
         return _flightService.FindFlightById(id);
     }
 
+    public IEnumerable<FlightDetails> FindFlightByDate(DateTime date)
+    {
+        return _flightService.FindFlightByDate(date);
+    }
+
     public IEnumerable<FlightDetails> FindFlights()
     {
         return _flightService.GetFlights();

@@ -24,4 +24,6 @@ public interface IFlightRepository
 
     public IEnumerable<ClassFlightRelation> GetFlightByClass(IEnumerable<ClassFlightRelation> relations, SearchState state,
         IEnumerable<ClassFlightRelation> availableFlights);
+
+    public IEnumerable<Flight> GetFlightByDate(DateTime date);
 }

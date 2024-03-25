@@ -1,3 +1,4 @@
+using System.Globalization;
 using Domain.CustomException;
 
 namespace UserInterface;
@@ -69,5 +70,20 @@ internal abstract class Utilities
             throw new NotValidUserInputException("Invalid Price");
 
         return price;
+    }
+
+    public static DateTime ReadDate()
+    {
+        Console.Write("""
+                      Please enter a date in the format 2001-01-30
+                      
+                      Date :
+                      """);
+        var input = Console.ReadLine();
+
+        if (DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            return date;
+
+        throw new NotValidUserInputException("Wrong Date Format!!");
     }
 }

@@ -12,6 +12,8 @@ public interface IFlightService
     public IEnumerable<FlightDetails> FindFlightByDepartureAirport(string name, SearchState state);
     public IEnumerable<FlightDetails> FindFlightsByPrice(float minPrice, float maxPrice, SearchState state);
     public IEnumerable<FlightDetails> FindFlightByClass(string className, SearchState state);
+    public IEnumerable<FlightDetails> FindFlightByDate(DateTime date);
+
     public IEnumerable<FlightDetails> FindFlights(IEnumerable<ClassFlightRelation> flightsClasses);
     public IEnumerable<FlightDetails> GetFlights();
 }

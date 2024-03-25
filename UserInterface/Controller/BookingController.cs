@@ -51,6 +51,7 @@ internal sealed class BookingController(
             _inputLine = ReadOption();
             float price;
             string readString;
+            DateTime date;
             const SearchState state = SearchState.All;
             IEnumerable<FlightDetails> flights = null;
 
@@ -93,7 +94,8 @@ internal sealed class BookingController(
                     flights = flightController.FindFlights();
                     break;
                 case ByDate:
-                    Menu();
+                    date = ReadDate();
+                    flights = flightController.FindFlightByDate(date);
                     break;
                 case 11:
                     Menu();
