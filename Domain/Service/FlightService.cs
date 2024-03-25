@@ -109,6 +109,15 @@ public sealed class FlightService : IFlightService
         return FindFullFlightDetails(flights, classes);
     }
 
+    public IEnumerable<FlightDetails> FindFlights(IEnumerable<ClassFlightRelation> flightsClasses)
+    {
+        var classes = _flightClassService.GetClassesById(flightsClasses);
+        var flights = _flightRepository.GetFlightsByRelations(flightsClasses, SearchState.Available, flightsClasses).ToList();
+        CheckListIfEmpty(flights, $"No Such Flights ");
+
+        return FindFullFlightDetails(flights, classes);
+    }
+
     public IEnumerable<ClassFlightRelation> GetAvailableFlights()
     {
         return _bookingService.GetAvailableFlights();

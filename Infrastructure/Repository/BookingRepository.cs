@@ -26,7 +26,7 @@ public sealed class BookingRepository(string fileName) : IBookingRepository
 
     public void AddNewBooking(string flightId, string passengerId, string flightClass)
     {
-        var booking = new Booking(flightId, passengerId, flightClass);
+        var booking = new Booking(flightId, flightClass, passengerId);
 
         using var stream = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.None);
         using var writer = new StreamWriter(stream);
@@ -38,7 +38,6 @@ public sealed class BookingRepository(string fileName) : IBookingRepository
 
     public IEnumerable<ClassFlightRelation> GetAvailableFlights(IEnumerable<FlightClass> classes)
     {
-        Func<dynamic, dynamic> selector;
         var allBookings = GetAllBookings();
         var flights = from booking in allBookings
             group booking by new { booking.FlightId, booking.ClassId }
@@ -54,6 +53,28 @@ public sealed class BookingRepository(string fileName) : IBookingRepository
             join classf in classes
                 on flight.ClassId equals classf.Id
             where flight.Count < classf.MaxSeat
+            select new ClassFlightRelation(flight.FlightId, flight.ClassId, 0);
+
+        return availableFlights;
+    }
+
+    public IEnumerable<ClassFlightRelation> GetAvailableFlights(IEnumerable<FlightClass> classes, string flightId)
+    {
+        var allBookings = GetAllBookings();
+        var flights = from booking in allBookings
+            group booking by new { booking.FlightId, booking.ClassId }
+            into grouped
+            select new
+            {
+                FlightId = grouped.Key.FlightId,
+                ClassId = grouped.Key.ClassId,
+                Count = grouped.Count()
+            };
+
+        var availableFlights = from flight in flights
+            join classf in classes
+                on flight.ClassId equals classf.Id
+            where flight.Count < classf.MaxSeat && flight.FlightId == flightId
             select new ClassFlightRelation(flight.FlightId, flight.ClassId, 0);
 
         return availableFlights;

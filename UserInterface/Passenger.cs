@@ -16,6 +16,8 @@ internal class Passenger
     private const string InvalidPassenger = "No Available Passenger with This ID";
     private const int cancelBooking = 3;
     private const int modifyBooking = 4;
+    private const int ListBookings = 5;
+    private const int LogOut = 6;
     private static int _inputLine;
     public static IAirportService AirportService;
     public static IFlightService FlightService;
@@ -110,10 +112,10 @@ internal class Passenger
             case modifyBooking:
                 bookingController.ModifyBookings();
                 break;
-            case 5:
+            case ListBookings:
                 bookingController.ListBookings();
                 break;
-            case 6:
+            case LogOut:
                 Utilities.Menu();
                 break;
             default:

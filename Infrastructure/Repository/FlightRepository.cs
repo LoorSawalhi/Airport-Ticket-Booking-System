@@ -43,10 +43,10 @@ public sealed class FlightRepository(string fileName) : IFlightRepository
         IEnumerable<ClassFlightRelation> availableFlights)
     {
         var flights = state == SearchState.All ? GetAllFlights() : GetAllFlights(state, availableFlights);
-        return from flight in flights
+        return (from flight in flights
             join relation in relations
                 on flight.Id equals relation.FlightId
-            select flight;
+            select flight).Distinct();
     }
 
     public IEnumerable<Flight> GetFlightByDepartureAirport(IEnumerable<Airport?> departureAirports, SearchState state,

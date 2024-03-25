@@ -15,6 +15,13 @@ public sealed class FlightClassService(IClassRepository classRepository) : IFlig
         return classes;
     }
 
+    public IEnumerable<FlightClass> GetClassesExceptId(string classId)
+    {
+        var classes = classRepository.GetClassesExceptId(classId).ToList();
+        CheckListIfEmpty(classes, $"No Available Classes");
+        return classes;
+    }
+
     public IEnumerable<FlightClass> GetClassesById(IEnumerable<ClassFlightRelation?> flightRs)
     {
         var classes = classRepository.GetClassesById(flightRs).ToList();

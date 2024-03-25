@@ -8,6 +8,7 @@ public interface IBookingRepository
     public int GetBookingsCount(string flightId, string classId);
     public void AddNewBooking(string flightId, string passengerId, string flightClass);
     public IEnumerable<ClassFlightRelation> GetAvailableFlights(IEnumerable<FlightClass> classes);
+    public IEnumerable<ClassFlightRelation> GetAvailableFlights(IEnumerable<FlightClass> classes, string flightId);
     public IEnumerable<Booking> GetBookingsById(string passengerId);
     public void DeleteBooking(Booking booking);
 }

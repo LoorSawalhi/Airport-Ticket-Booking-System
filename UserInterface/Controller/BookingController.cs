@@ -1,6 +1,7 @@
 using Domain.CustomException;
 using Domain.Models;
 using Domain.Service_Interface;
+using Infrastructre.Repository;
 using static Domain.InputHandling;
 using static UserInterface.Utilities;
 
@@ -58,18 +59,22 @@ internal sealed class BookingController(
     {
         HandleUserInput<NotValidFlightIdException>(() =>
         {
-            var bookingForDeletion = ChooseBooking("""
+            var booking = ChooseBooking("""
                                                    Choose The Booking You Want To Modify By It's Index!!
 
                                                    Index :
                                                    """);
+
             Console.Write("""
                           You Can Modify Your Booking By:
                           
                           1) Changing the flight class to an available one.
                           2) Change the whole flight.
+                          
+                          Option : 
                           """);
-            bookingService.CancelBooking(bookingForDeletion);
+            var option = ReadOption();
+            Options(option, booking);
             throw new BreakLoopException();
         });
     }
@@ -99,5 +104,69 @@ internal sealed class BookingController(
         }
 
         return bookings;
+    }
+
+    private void Options(int option, Booking booking)
+    {
+        const int changeClass = 1, changeFlight = 2;
+        switch (option)
+        {
+            case changeClass:
+                ChangeBookingClass(booking);
+                break;
+            case changeFlight:
+                ChangeFlight(booking);
+                break;
+            default:
+                throw new NotValidUserInputException(InvalidOption);
+        }
+    }
+
+    private void ChangeFlight(Booking booking)
+    {
+        var bookings = bookingService.GetAvailableFlights(booking).ToList();
+        Console.WriteLine($"""
+                           Here Is The Booking You Wish To Change!
+
+                           {booking}
+
+                           You Can Choose One of The Following Flights :
+                           """);
+        var bookingOptions = flightController.FilteredFlights(bookings).ToList();
+        var iterator = 1;
+        foreach (var flight in bookingOptions)
+        {
+            Console.WriteLine($"{iterator} - {flight}");
+            iterator += 1;
+        }
+
+        Console.Write("Flight Index : ");
+        var index = ReadOption();
+        if (index > bookingOptions.Count)
+            throw new NotValidUserInputException(InvalidOption);
+
+        var newBooking = bookings.ElementAt(index - 1);
+        bookingService.RemoveBooking(booking);
+        bookingService.CreateBooking(newBooking.FlightId, newBooking.ClassId, passenger.id);
+        ListBookings();
+        throw new BreakLoopException();
+    }
+
+    private void ChangeBookingClass(Booking booking)
+    {
+        var bookings = bookingService.GetAvailableFlights(booking).ToList();
+        Console.WriteLine($"""
+                          Here Is The Booking You Wish To Change!
+                          
+                          {booking}
+                          
+                          You Can Choose One of The Following Flights : 
+                          """);
+
+        var flights = flightController.SearchFlights(true);
+        BookFlight(flights);
+        bookingService.RemoveBooking(booking);
+        ListBookings();
+        throw new BreakLoopException();
     }
 }

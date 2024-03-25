@@ -1,6 +1,6 @@
 namespace Domain.Models;
 
-public sealed class ClassFlightRelation
+public sealed record ClassFlightRelation
 {
     public ClassFlightRelation(string flightId, string classId, float price)
     {

@@ -24,6 +24,11 @@ public sealed class BookingService(
         bookingRepository.AddNewBooking(flight.id, passengerId, classId.Id);
     }
 
+    public void CreateBooking(string flightId, string classId, string passengerId)
+    {
+        bookingRepository.AddNewBooking(flightId, passengerId, classId);
+    }
+
     public int GetClassCurrentSeats(string classId, string flightId)
     {
         return bookingRepository.GetBookingsCount(flightId, classId);
@@ -45,6 +50,14 @@ public sealed class BookingService(
         return availableFlights;
     }
 
+    public IEnumerable<ClassFlightRelation> GetAvailableFlights(Booking booking)
+    {
+        var classes = flightClassService.GetClassesExceptId(booking.ClassId);
+        var availableFlights = bookingRepository.GetAvailableFlights(classes, booking.FlightId).ToList();
+        CheckListIfEmpty(availableFlights, $"No Available Flights");
+        return availableFlights;
+    }
+
     public IEnumerable<Booking> GetAllBookings(string passengerId)
     {
         var bookings = bookingRepository.GetBookingsById(passengerId).ToList();
@@ -56,5 +69,10 @@ public sealed class BookingService(
     {
          bookingRepository.DeleteBooking(booking);
          Console.WriteLine($"{booking} Was Canceled Successfully");
+    }
+
+    public void RemoveBooking(Booking booking)
+    {
+        bookingRepository.DeleteBooking(booking);
     }
 }

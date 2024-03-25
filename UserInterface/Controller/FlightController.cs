@@ -100,4 +100,9 @@ public sealed class FlightController
         Console.WriteLine();
         return flights;
     }
+
+    public IEnumerable<FlightDetails> FilteredFlights(IEnumerable<ClassFlightRelation> flightsClasses)
+    {
+        return _flightService.FindFlights(flightsClasses);
+    }
 }

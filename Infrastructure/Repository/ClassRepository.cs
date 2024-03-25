@@ -22,6 +22,12 @@ public sealed class ClassRepository(string fileName) : IClassRepository
         return records.ToList();
     }
 
+    public IEnumerable<FlightClass> GetClassesExceptId(string classId)
+    {
+        var classes = GetAllClasses();
+        return GetAllClasses().Where(flightClass => (!flightClass.Id.Equals(classId)));
+    }
+
     public IEnumerable<FlightClass> GetClassesById(IEnumerable<ClassFlightRelation?> flightRs)
     {
         var classes = GetAllClasses();
@@ -48,20 +54,5 @@ public sealed class ClassRepository(string fileName) : IClassRepository
     {
         return GetAllClasses().FirstOrDefault(fClass => fClass?.Id == id) ??
                throw new EmptyQueryResultException($"No Class With Such ID {id}");
-    }
-
-    public void Add(FlightClass flightClass)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Delete(FlightClass flightClass)
-    {
-        throw new NotImplementedException();
-    }
-
-    public FlightClass Update(FlightClass newClass, string id)
-    {
-        throw new NotImplementedException();
     }
 }
