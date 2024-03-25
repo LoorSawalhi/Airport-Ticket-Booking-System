@@ -258,7 +258,6 @@ internal sealed class BookingController(
 
     private void ChangeBookingClass(Booking booking)
     {
-        var bookings = bookingService.GetAvailableFlights(booking).ToList();
         Console.WriteLine($"""
                           Here Is The Booking You Wish To Change!
                           

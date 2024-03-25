@@ -1,4 +1,3 @@
-using Domain;
 using UserInterface.Controller;
 using Domain.CustomException;
 using Domain.Service_Interface;
@@ -47,8 +46,7 @@ internal class Passenger
             {
                 passenger = _passengerService.FindPassengerById(userId);
 
-                flightController = new FlightController(FlightService, RClassFlightService, FlightClassService,
-                    passenger, SearchState.Available);
+                flightController = new FlightController(FlightService);
                 bookingController = new BookingController(flightController, BookingService, _passengerService, passenger);
                 PassengerOptions();
             }

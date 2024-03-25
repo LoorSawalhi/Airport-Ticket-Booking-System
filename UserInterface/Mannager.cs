@@ -1,4 +1,3 @@
-using Domain;
 using Domain.CustomException;
 using Domain.Service_Interface;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,10 +10,10 @@ namespace UserInterface;
 internal class Mannager
 {
     public static IAirportService AirportService;
-    public static IFlightService FlightService;
+    private static IFlightService FlightService;
     public static IRClassFlightService RClassFlightService;
     public static IFlightClassService FlightClassService;
-    public static IBookingService BookingService;
+    private static IBookingService BookingService;
     private static IPassengerService PassengerService;
 
 
@@ -40,8 +39,7 @@ internal class Mannager
             var readLine = Console.ReadLine();
             if (readLine != null && int.TryParse(readLine, out var option))
             {
-                flightController = new FlightController(FlightService, RClassFlightService, FlightClassService,
-                    passenger, SearchState.Available);
+                flightController = new FlightController(FlightService);
                 bookingController = new BookingController(flightController, BookingService, PassengerService, passenger);
                 Options(option);
             }

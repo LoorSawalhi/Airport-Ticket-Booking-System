@@ -26,11 +26,11 @@ public sealed class FlightRepository(string fileName) : IFlightRepository
     public IEnumerable<Flight?> GetAllFlights(SearchState state, IEnumerable<ClassFlightRelation> availableFlights)
     {
         var allFlights = GetAllFlights();
-        var availables = from flight in allFlights
+        var flights = from flight in allFlights
             join availableFlight in availableFlights
                 on flight.Id equals availableFlight.FlightId
             select flight;
-        return availables;
+        return flights;
     }
 
     public Flight FindById(string id)

@@ -24,23 +24,8 @@ public sealed class AirportRepository(string fileName) : IAirportRepository
 
     public Airport FindById(string id)
     {
-        return GetAllAirports().FirstOrDefault(airport => airport?.Id == id) ??
+        return GetAllAirports().FirstOrDefault(airport => airport.Id == id) ??
                throw new EmptyQueryResultException($"No Airport With Such ID {id}");
-    }
-
-    public void Add(Airport airport)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Delete(Airport airport)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Airport Update(Airport newAirport, string id)
-    {
-        throw new NotImplementedException();
     }
 
     public IEnumerable<Airport> GetAirportByCountry(string country)
@@ -55,7 +40,7 @@ public sealed class AirportRepository(string fileName) : IAirportRepository
 
     public IEnumerable<FlightInfo> GetFlightInfos(IEnumerable<Flight> flights)
     {
-        var airports = GetAllAirports();
+        var airports = GetAllAirports().ToList();
         return from flight in flights
             join departureAirport in airports
                 on flight.DepartureAirport equals departureAirport.Id

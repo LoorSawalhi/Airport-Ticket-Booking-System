@@ -1,6 +1,6 @@
 namespace Domain.Models;
 
-public record Airport
+public abstract record Airport
 {
     private string _id;
     private string _name;

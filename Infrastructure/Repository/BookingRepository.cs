@@ -9,7 +9,7 @@ namespace Infrastructre.Repository;
 
 public sealed class BookingRepository(string fileName) : IBookingRepository
 {
-    CsvConfiguration _config = new CsvConfiguration(CultureInfo.InvariantCulture)
+    private readonly CsvConfiguration _config = new(CultureInfo.InvariantCulture)
     {
         HasHeaderRecord = true,
         HeaderValidated = null,
@@ -44,15 +44,15 @@ public sealed class BookingRepository(string fileName) : IBookingRepository
             into grouped
             select new
             {
-                FlightId = grouped.Key.FlightId,
-                ClassId = grouped.Key.ClassId,
+                grouped.Key.FlightId,
+                grouped.Key.ClassId,
                 Count = grouped.Count()
             };
 
         var availableFlights = from flight in flights
-            join classf in classes
-                on flight.ClassId equals classf.Id
-            where flight.Count < classf.MaxSeat
+            join flightClass in classes
+                on flight.ClassId equals flightClass.Id
+            where flight.Count < flightClass.MaxSeat
             select new ClassFlightRelation(flight.FlightId, flight.ClassId, 0);
 
         return availableFlights;
@@ -66,15 +66,15 @@ public sealed class BookingRepository(string fileName) : IBookingRepository
             into grouped
             select new
             {
-                FlightId = grouped.Key.FlightId,
-                ClassId = grouped.Key.ClassId,
+                grouped.Key.FlightId,
+                grouped.Key.ClassId,
                 Count = grouped.Count()
             };
 
         var availableFlights = from flight in flights
-            join classf in classes
-                on flight.ClassId equals classf.Id
-            where flight.Count < classf.MaxSeat && flight.FlightId == flightId
+            join flightClass in classes
+                on flight.ClassId equals flightClass.Id
+            where flight.Count < flightClass.MaxSeat && flight.FlightId == flightId
             select new ClassFlightRelation(flight.FlightId, flight.ClassId, 0);
 
         return availableFlights;

@@ -1,8 +1,3 @@
 namespace Domain.CustomException;
 
-public sealed class BreakLoopException : Exception
-{
-    public BreakLoopException()
-    {
-    }
-}
+public sealed class BreakLoopException : Exception;

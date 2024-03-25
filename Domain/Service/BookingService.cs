@@ -7,9 +7,7 @@ using static Domain.InputHandling;
 namespace Domain.Service;
 
 public sealed class BookingService(
-    IPassengerService passengerService,
     IFlightClassService flightClassService,
-    IAirportService airportService,
     IBookingRepository bookingRepository)
     : IBookingService
 {

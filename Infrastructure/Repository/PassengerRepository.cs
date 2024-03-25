@@ -1,7 +1,6 @@
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
 
@@ -25,20 +24,5 @@ public sealed class PassengerRepository(string fileName) : IPassengerRepository
     public Passenger? FindById(string id)
     {
         return GetAllPassengers().FirstOrDefault(passenger => passenger?.id == id);
-    }
-
-    public void Add(Passenger passenger)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Delete(Passenger passenger)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Passenger Update(Passenger newPassenger, string id)
-    {
-        throw new NotImplementedException();
     }
 }

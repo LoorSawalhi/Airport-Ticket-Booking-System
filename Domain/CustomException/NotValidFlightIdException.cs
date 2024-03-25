@@ -1,3 +1,3 @@
 namespace Domain.CustomException;
 
-public sealed class NotValidFlightIdException(string message) : Exception(message);
+public abstract class NotValidFlightIdException(string message) : Exception(message);

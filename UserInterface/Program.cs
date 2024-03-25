@@ -1,6 +1,3 @@
-﻿using Domain.Models;
-using Domain.Repository;
-using Infrastructre.Repository;
-using UserInterface;
+﻿using UserInterface;
 
 Utilities.Menu();

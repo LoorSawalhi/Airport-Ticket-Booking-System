@@ -1,6 +1,4 @@
 using Domain.Models;
-using Domain.Repository;
-using Domain.Service;
 
 namespace Domain.Service_Interface;
 
@@ -15,6 +13,5 @@ public interface IFlightService
     public IEnumerable<FlightDetails> FindFlightsByPrice(float minPrice, float maxPrice, SearchState state);
     public IEnumerable<FlightDetails> FindFlightByClass(string className, SearchState state);
     public IEnumerable<FlightDetails> FindFlights(IEnumerable<ClassFlightRelation> flightsClasses);
-    public IEnumerable<ClassFlightRelation> GetAvailableFlights();
     public IEnumerable<FlightDetails> GetFlights();
 }

@@ -11,5 +11,4 @@ public interface IClassRepository
 
     public FlightClass GetClassByName(string className);
     public int GetMaxSeats(string className);
-    public FlightClass FindById(string id);
 }

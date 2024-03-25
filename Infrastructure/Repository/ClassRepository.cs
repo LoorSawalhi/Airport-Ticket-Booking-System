@@ -24,17 +24,16 @@ public sealed class ClassRepository(string fileName) : IClassRepository
 
     public IEnumerable<FlightClass> GetClassesExceptId(string classId)
     {
-        var classes = GetAllClasses();
         return GetAllClasses().Where(flightClass => (!flightClass.Id.Equals(classId)));
     }
 
     public IEnumerable<FlightClass> GetClassesById(IEnumerable<ClassFlightRelation?> flightRs)
     {
         var classes = GetAllClasses();
-        return from classf in classes
+        return from flightClass in classes
             join flightR in flightRs
-                on classf.Id equals flightR.ClassId
-            select classf;
+                on flightClass.Id equals flightR.ClassId
+            select flightClass;
     }
 
     public FlightClass GetClassByName(string className)
@@ -48,11 +47,5 @@ public sealed class ClassRepository(string fileName) : IClassRepository
     {
         return GetAllClasses().FirstOrDefault(classF =>
             classF.Name.Equals(className, StringComparison.InvariantCultureIgnoreCase))?.MaxSeat ?? 0;
-    }
-
-    public FlightClass FindById(string id)
-    {
-        return GetAllClasses().FirstOrDefault(fClass => fClass?.Id == id) ??
-               throw new EmptyQueryResultException($"No Class With Such ID {id}");
     }
 }

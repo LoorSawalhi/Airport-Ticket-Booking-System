@@ -1,4 +1,3 @@
-using Domain.CustomException;
 using Domain.Models;
 using Domain.Repository;
 using Domain.Service_Interface;
@@ -7,13 +6,9 @@ using static Domain.InputHandling;
 namespace Domain.Service;
 
 public sealed class RClassFlightService(
-    IRClassFlightRepository classFlightRepository,
-    IFlightClassService flightClassService)
+    IRClassFlightRepository classFlightRepository)
     : IRClassFlightService
 {
-    private readonly IFlightClassService _flightClassService = flightClassService;
-
-
     public IEnumerable<ClassFlightRelation> FindAllRelations()
     {
         return classFlightRepository.GetAllFlightsClasses();
@@ -47,6 +42,4 @@ public sealed class RClassFlightService(
         CheckListIfEmpty(flights, $"No Available Flights With Price Range [{minPrice}, {maxPrice}]");
         return flights;
     }
-    
-    
 }

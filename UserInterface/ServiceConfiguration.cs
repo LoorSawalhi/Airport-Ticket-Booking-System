@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace UserInterface;
 
-public static class ServiceConfiguration
+internal static class ServiceConfiguration
 {
     public static IServiceCollection ConfigureServices()
     {

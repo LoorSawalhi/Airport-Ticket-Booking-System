@@ -15,8 +15,8 @@ public sealed class RClassFlightRepository(string fileName) : IRClassFlightRepos
         return from flight in flights
             join relation in relations
                 on flight.Id equals relation.FlightId
-            join classf in classes
-                on relation.ClassId equals classf.Id into details
+            join flightClass in classes
+                on relation.ClassId equals flightClass.Id into details
             from allDetails in details
             select new FlightDetails(flight.Id, flight.DepartureDate, flight.DepartureAirport, flight.ArrivalAirport
             , allDetails.Name, relation.Price);
@@ -60,20 +60,5 @@ public sealed class RClassFlightRepository(string fileName) : IRClassFlightRepos
                 on flightR.ClassId equals classInfo.Id
             select new FlightDetails(flight.Id, flight.DepartureDate, flight.DepartureAirportName,
                 flight.ArrivalAirportName, classInfo.Name, flightR.Price);
-    }
-
-    public void Add(ClassFlightRelation flightClass)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Delete(ClassFlightRelation flightClass)
-    {
-        throw new NotImplementedException();
-    }
-
-    public ClassFlightRelation Update(ClassFlightRelation newClass, string id)
-    {
-        throw new NotImplementedException();
     }
 }

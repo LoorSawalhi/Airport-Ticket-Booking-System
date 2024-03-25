@@ -2,7 +2,8 @@ namespace Domain.Models;
 
 public record Booking
 {
-    public Booking(){
+    public Booking()
+    {
     }
 
     public Booking(string flightId, string classId, string passengerId)

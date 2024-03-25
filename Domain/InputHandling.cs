@@ -2,7 +2,7 @@ using Domain.CustomException;
 
 namespace Domain;
 
-public class InputHandling
+public abstract class InputHandling
 {
     public static T? HandleUserInput<TException, T>(Func<T> optionAction) where TException : Exception
     {
@@ -26,9 +26,9 @@ public class InputHandling
         return default(T);
     }
 
-    public static void HandleUserInput<TException,QException>(Action optionAction)
+    public static void HandleUserInput<TException, TQException>(Action optionAction)
         where TException : Exception
-        where QException : Exception
+        where TQException : Exception
     {
         while (true)
             try
@@ -39,7 +39,7 @@ public class InputHandling
             {
                 break;
             }
-            catch (Exception e) when (e is TException or QException)
+            catch (Exception e) when (e is TException or TQException)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine();
@@ -48,9 +48,9 @@ public class InputHandling
             }
     }
 
-    public static T? HandleUserInput<TException,QException, T>(Func<T> optionAction)
+    public static T? HandleUserInput<TException, TQException, T>(Func<T> optionAction)
         where TException : Exception
-        where QException : Exception
+        where TQException : Exception
     {
         while (true)
             try
@@ -61,7 +61,7 @@ public class InputHandling
             {
                 break;
             }
-            catch (Exception e) when (e is TException or QException)
+            catch (Exception e) when (e is TException or TQException)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine();
@@ -92,7 +92,7 @@ public class InputHandling
             }
     }
 
-    public static int ExitCond()
+    private static int ExitCond()
     {
         Console.Write("To exit type e or E => ");
         var e = Console.ReadLine() ?? string.Empty;
@@ -102,11 +102,8 @@ public class InputHandling
         return 0;
     }
 
-    public static void CheckListIfEmpty<T>(List<T> list, string message)
+    internal static void CheckListIfEmpty<T>(List<T> list, string message)
     {
-        if (list.Count <= 0)
-        {
-            throw new EmptyQueryResultException(message);
-        }
+        if (list.Count <= 0) throw new EmptyQueryResultException(message);
     }
 }

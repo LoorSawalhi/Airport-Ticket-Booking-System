@@ -1,7 +1,6 @@
 using Domain;
 using Domain.CustomException;
 using Domain.Models;
-using Domain.Service;
 using Domain.Service_Interface;
 using static Domain.InputHandling;
 
@@ -12,22 +11,13 @@ using static Utilities;
 internal sealed class FlightController
 {
     private readonly IFlightService _flightService;
-    private readonly IRClassFlightService _rClassFlightService;
-    private readonly IFlightClassService _flightClassService;
-    private readonly SearchState _state;
 
-    private static Domain.Models.Passenger _passenger;
     private static int _inputLine;
     private SearchState _searchState = SearchState.All;
 
-    internal FlightController(IFlightService flightService, IRClassFlightService rClassFlightService,
-        IFlightClassService flightClassService, Domain.Models.Passenger passenger, SearchState state)
+    internal FlightController(IFlightService flightService)
     {
         _flightService = flightService;
-        _rClassFlightService = rClassFlightService;
-        _flightClassService = flightClassService;
-        _passenger = passenger;
-        _state = state;
     }
 
     public IEnumerable<FlightDetails> SearchFlights(bool booking)
@@ -50,8 +40,8 @@ internal sealed class FlightController
                           Option : 
                           """);
             _inputLine = ReadOption();
-            var price = 0.0f;
-            var readString = "";
+            float price;
+            string readString;
             IEnumerable<FlightDetails> data = null;
             switch (_inputLine)
             {
@@ -65,7 +55,7 @@ internal sealed class FlightController
                     break;
                 case 3:
                     price = ReadPrice("Enter price : "); //Price (Under a number)
-                    data = FindFlightsByPrice(0,price, _searchState);
+                    data = FindFlightsByPrice(0, price, _searchState);
                     break;
                 case 4:
                     price = ReadPrice("Enter price : "); //Price (Above a number)
@@ -91,7 +81,7 @@ internal sealed class FlightController
             }
 
             return data;
-        });
+        }).ToList();
 
         Console.WriteLine("Your Search Results Are : ");
         var iterator = 1;

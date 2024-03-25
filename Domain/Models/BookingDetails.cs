@@ -1,6 +1,6 @@
 namespace Domain.Models;
 
-public record BookingDetails(
+public sealed record BookingDetails(
     string passengerId,
     string flightId,
     DateTime departureDate,
