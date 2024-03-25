@@ -9,7 +9,7 @@ namespace UserInterface.Controller;
 
 using static Utilities;
 
-public sealed class FlightController
+internal sealed class FlightController
 {
     private readonly IFlightService _flightService;
     private readonly IRClassFlightService _rClassFlightService;
@@ -20,7 +20,7 @@ public sealed class FlightController
     private static int _inputLine;
     private SearchState _searchState = SearchState.All;
 
-    public FlightController(IFlightService flightService, IRClassFlightService rClassFlightService,
+    internal FlightController(IFlightService flightService, IRClassFlightService rClassFlightService,
         IFlightClassService flightClassService, Domain.Models.Passenger passenger, SearchState state)
     {
         _flightService = flightService;
@@ -45,6 +45,7 @@ public sealed class FlightController
                           5) Departure Airport
                           6) Arrival Airport
                           7) Class
+                          8) Log Out
 
                           Option : 
                           """);
@@ -56,31 +57,34 @@ public sealed class FlightController
             {
                 case 1:
                     readString = ReadString("Enter departure country : ");
-                    data = _flightService.FindFlightByDepartureCountry(readString, _searchState);
+                    data = FindFlightByDepartureCountry(readString, _searchState);
                     break;
                 case 2:
                     readString = ReadString("Enter arrival country : ");
-                    data = _flightService.FindFlightByArrivalCountry(readString, _searchState);
+                    data = FindFlightByArrivalCountry(readString, _searchState);
                     break;
                 case 3:
                     price = ReadPrice("Enter price : "); //Price (Under a number)
-                    data = _flightService.FindFlightsByPrice(0, price, _searchState);
+                    data = FindFlightsByPrice(0,price, _searchState);
                     break;
                 case 4:
                     price = ReadPrice("Enter price : "); //Price (Above a number)
-                    data = _flightService.FindFlightsByPrice(price, float.MaxValue, _searchState);
+                    data = FindFlightsByPrice(price, float.MaxValue, _searchState);
                     break;
                 case 5:
                     readString = ReadString("Enter departure airport : ");
-                    data = _flightService.FindFlightByDepartureAirport(readString, _searchState);
+                    data = FindFlightByDepartureAirport(readString, _searchState);
                     break;
                 case 6:
                     readString = ReadString("Enter arrival airport : ");
-                    data = _flightService.FindFlightByArrivalAirport(readString, _searchState);
+                    data = FindFlightByArrivalAirport(readString, _searchState);
                     break;
                 case 7:
                     readString = ReadString("Enter flight class : ");
-                    data = _flightService.FindFlightByClass(readString, _searchState);
+                    data = FindFlightByClass(readString, _searchState);
+                    break;
+                case 8:
+                    Menu();
                     break;
                 default:
                     throw new NotValidUserInputException(InvalidOption);
@@ -101,8 +105,48 @@ public sealed class FlightController
         return flights;
     }
 
+    public IEnumerable<FlightDetails> FindFlightByClass(string readString, SearchState state)
+    {
+        return _flightService.FindFlightByClass(readString, state);
+    }
+
+    public IEnumerable<FlightDetails> FindFlightsByPrice(float minPrice, float maxPrice, SearchState state)
+    {
+        return _flightService.FindFlightsByPrice(minPrice, maxPrice, state);
+    }
+
     public IEnumerable<FlightDetails> FilteredFlights(IEnumerable<ClassFlightRelation> flightsClasses)
     {
         return _flightService.FindFlights(flightsClasses);
+    }
+
+    public IEnumerable<FlightDetails> FindFlightByDepartureCountry(string country, SearchState state)
+    {
+        return _flightService.FindFlightByDepartureCountry(country, state);
+    }
+
+    public IEnumerable<FlightDetails> FindFlightByArrivalCountry(string airport, SearchState state)
+    {
+        return _flightService.FindFlightByArrivalCountry(airport, state);
+    }
+
+    public IEnumerable<FlightDetails> FindFlightByDepartureAirport(string airport, SearchState state)
+    {
+        return _flightService.FindFlightByArrivalAirport(airport, state);
+    }
+
+    public IEnumerable<FlightDetails> FindFlightByArrivalAirport(string airport, SearchState state)
+    {
+        return _flightService.FindFlightByDepartureAirport(airport, state);
+    }
+
+    public IEnumerable<FlightDetails> FindFlightById(string id)
+    {
+        return _flightService.FindFlightById(id);
+    }
+
+    public IEnumerable<FlightDetails> FindFlights()
+    {
+        return _flightService.GetFlights();
     }
 }

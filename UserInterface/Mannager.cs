@@ -1,4 +1,7 @@
+using Domain;
 using Domain.CustomException;
+using Domain.Service_Interface;
+using UserInterface.Controller;
 using static UserInterface.Utilities;
 using static Domain.InputHandling;
 
@@ -6,6 +9,19 @@ namespace UserInterface;
 
 internal class Mannager
 {
+    public static IAirportService AirportService;
+    public static IFlightService FlightService;
+    public static IRClassFlightService RClassFlightService;
+    public static IFlightClassService FlightClassService;
+    public static IBookingService BookingService;
+    private static IPassengerService PassengerService;
+
+
+    private static FlightController flightController;
+    private static BookingController bookingController;
+
+    public static Domain.Models.Passenger? passenger;
+
     public static void Menu()
     {
         HandleUserInput<NotValidUserInputException>(() =>
@@ -18,9 +34,16 @@ internal class Mannager
                               """);
             var readLine = Console.ReadLine();
             if (readLine != null && int.TryParse(readLine, out var option))
+            {
+                flightController = new FlightController(FlightService, RClassFlightService, FlightClassService,
+                    passenger, SearchState.Available);
+                bookingController = new BookingController(flightController, BookingService, PassengerService, passenger);
                 Options(option);
+            }
             else
+            {
                 throw new NotValidUserInputException(InvalidOption);
+            }
         });
     }
 
@@ -29,13 +52,13 @@ internal class Mannager
         switch (option)
         {
             case 1:
-                //Filter Bookings
+                bookingController.FilterBookings();
                 break;
             case 2:
                 //Upload Flights
                 break;
             case 3:
-                //Log out
+                Utilities.Menu();
                 break;
             default:
                 throw new NotValidUserInputException(InvalidOption);

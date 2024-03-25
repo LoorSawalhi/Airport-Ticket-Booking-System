@@ -2,7 +2,7 @@ using Domain.CustomException;
 
 namespace UserInterface;
 
-internal class Utilities
+internal abstract class Utilities
 {
     public const string InvalidOption = "Invalid Option !!! Try again.";
     private static int _inputLine;

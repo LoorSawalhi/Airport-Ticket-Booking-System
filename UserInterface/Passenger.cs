@@ -1,7 +1,5 @@
 using Domain;
-using Infrastructre.Repository;
 using UserInterface.Controller;
-using Domain.Service;
 using Domain.CustomException;
 using Domain.Service_Interface;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,15 +18,16 @@ internal class Passenger
     private const int LogOut = 6;
     private static int _inputLine;
     public static IAirportService AirportService;
-    public static IFlightService FlightService;
-    public static IRClassFlightService RClassFlightService;
-    public static IFlightClassService FlightClassService;
-    public static IBookingService BookingService;
+    private static IFlightService FlightService;
+    private static IRClassFlightService RClassFlightService;
+    private static IFlightClassService FlightClassService;
+    private static IBookingService BookingService;
 
-    public static FlightController flightController;
-    public static BookingController bookingController;
+    private static FlightController flightController;
+    private static BookingController bookingController;
 
-    public static Domain.Models.Passenger? passenger;
+    private static Domain.Models.Passenger? passenger;
+    private static IPassengerService _passengerService;
 
 
     public static void Menu()
@@ -46,10 +45,11 @@ internal class Passenger
             var userId = Console.ReadLine();
             if (userId != null)
             {
-                passenger = passengerService.FindPassengerById(userId);
+                passenger = _passengerService.FindPassengerById(userId);
 
-                flightController = new FlightController(FlightService, RClassFlightService, FlightClassService, passenger, SearchState.Available);
-                bookingController = new BookingController(flightController, BookingService, FlightClassService, RClassFlightService, passenger);
+                flightController = new FlightController(FlightService, RClassFlightService, FlightClassService,
+                    passenger, SearchState.Available);
+                bookingController = new BookingController(flightController, BookingService, _passengerService, passenger);
                 PassengerOptions();
             }
             else

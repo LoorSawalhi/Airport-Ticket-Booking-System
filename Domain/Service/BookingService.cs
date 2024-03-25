@@ -9,6 +9,7 @@ namespace Domain.Service;
 public sealed class BookingService(
     IPassengerService passengerService,
     IFlightClassService flightClassService,
+    IAirportService airportService,
     IBookingRepository bookingRepository)
     : IBookingService
 {
@@ -74,5 +75,19 @@ public sealed class BookingService(
     public void RemoveBooking(Booking booking)
     {
         bookingRepository.DeleteBooking(booking);
+    }
+
+    public IEnumerable<FlightDetails> FindBookings(IEnumerable<FlightDetails> flights)
+    {
+        var filteredFlights = bookingRepository.FilterFlightsByBookings(flights).ToList();
+        CheckListIfEmpty(filteredFlights, $"No Available Bookings");
+        return filteredFlights;
+    }
+
+    public IEnumerable<FlightDetails> FindBookings(IEnumerable<FlightDetails> flights, string passengerId)
+    {
+        var filteredFlights = bookingRepository.FilterFlightsByPassengerId(flights, passengerId).ToList();
+        CheckListIfEmpty(filteredFlights, $"No Available Bookings for Passenger {passengerId}");
+        return filteredFlights;
     }
 }

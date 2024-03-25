@@ -11,4 +11,7 @@ public interface IBookingRepository
     public IEnumerable<ClassFlightRelation> GetAvailableFlights(IEnumerable<FlightClass> classes, string flightId);
     public IEnumerable<Booking> GetBookingsById(string passengerId);
     public void DeleteBooking(Booking booking);
+    public IEnumerable<FlightDetails> FilterFlightsByBookings(IEnumerable<FlightDetails> flights);
+    public IEnumerable<FlightDetails> FilterFlightsByPassengerId(IEnumerable<FlightDetails> flights, string passengerId);
+
 }

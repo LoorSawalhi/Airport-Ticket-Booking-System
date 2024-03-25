@@ -32,9 +32,13 @@ public sealed class FlightService : IFlightService
         set => _passenger = value;
     }
 
-    public Flight? FindFlightById(string id)
+    public IEnumerable<FlightDetails> FindFlightById(string id)
     {
-        return _flightRepository.FindById(id);
+        var flight = new List<Flight?> { _flightRepository.FindById(id) };
+        CheckListIfEmpty(flight, $"No Flights With Such {id}");
+        var fullDetails = FindFullFlightDetails(flight);
+
+        return fullDetails;
     }
 
     public IEnumerable<FlightDetails> FindFlightByDepartureCountry(string country, SearchState state)
@@ -121,6 +125,18 @@ public sealed class FlightService : IFlightService
     public IEnumerable<ClassFlightRelation> GetAvailableFlights()
     {
         return _bookingService.GetAvailableFlights();
+    }
+
+    public IEnumerable<FlightDetails> GetFlights()
+    {
+        var flights = _flightRepository.GetAllFlights().ToList();
+        CheckListIfEmpty(flights, $"No Available Flights");
+
+        var flightsInfo = _airportService.GetFlightsInfo(flights!);
+        var relations = _rClassFlightService.FindAllRelations();
+        var allClasses = _flightClassService.GetAllClasses();
+        var flightsDetails = _rClassFlightService.FindFlightClassesAndPrice(flightsInfo, allClasses, relations);
+        return flightsDetails;
     }
 
     private IEnumerable<FlightDetails> FindFullFlightDetails(

@@ -6,7 +6,7 @@ namespace Domain.Service_Interface;
 
 public interface IFlightService
 {
-    public Flight? FindFlightById(string id);
+    public IEnumerable<FlightDetails> FindFlightById(string id);
 
     public IEnumerable<FlightDetails> FindFlightByDepartureCountry(string country, SearchState state);
     public IEnumerable<FlightDetails> FindFlightByArrivalCountry(string country, SearchState state);
@@ -16,4 +16,5 @@ public interface IFlightService
     public IEnumerable<FlightDetails> FindFlightByClass(string className, SearchState state);
     public IEnumerable<FlightDetails> FindFlights(IEnumerable<ClassFlightRelation> flightsClasses);
     public IEnumerable<ClassFlightRelation> GetAvailableFlights();
+    public IEnumerable<FlightDetails> GetFlights();
 }

@@ -102,6 +102,24 @@ public sealed class BookingRepository(string fileName) : IBookingRepository
         WriteBookings(allBookings);
     }
 
+    public IEnumerable<FlightDetails> FilterFlightsByBookings(IEnumerable<FlightDetails> flights)
+    {
+        var allBookings = GetAllBookings();
+        return from booking in allBookings
+            join flight in flights
+                on booking.FlightId equals flight.id
+            select flight;
+    }
+
+    public IEnumerable<FlightDetails> FilterFlightsByPassengerId(IEnumerable<FlightDetails> flights, string passengerId)
+    {
+        var allBookings = GetAllBookings();
+        return from booking in allBookings
+            join flight in flights
+                on new(booking.FlightId, booking.PassengerId) equals (flight.id, passengerId)
+            select flight;
+    }
+
     private void WriteBookings(IEnumerable<Booking> bookings)
     {
         using var writer = new StreamWriter(fileName);
