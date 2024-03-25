@@ -1,0 +1,6 @@
+flight_id,departure_date,arrival_country,arrival_airport,departure_country,departure_airport,class_name,price,passenger_id,passenger_name
+1,2024-03-25,USA,JFK,UK,LHR,Economy,500,1,John Doe
+2,2024-03-26,France,CDG,Germany,FRA,Business,1000,2,Jane Smith
+3,2024-03-27,Spain,MAD,Italy,FCO,First,1500,3,Alice Johnson
+4,2024-03-28,Japan,HND,China,PEK,Economy,600,4,Bob Brown
+5,2024-03-29,Australia,SID,New Zealand,AKL,Business,1200,5,Emily Wilson

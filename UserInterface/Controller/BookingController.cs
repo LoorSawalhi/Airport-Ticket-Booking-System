@@ -14,6 +14,16 @@ internal sealed class BookingController(
     Domain.Models.Passenger passenger
     )
 {
+    private const int FindFlightById = 1;
+    private const int ByDepartureCountry = 2;
+    private const int ByArrivalCountry = 3;
+    private const int ByPriceLow = 4;
+    private const int ByPriceHight = 5;
+    private const int ByDepartureAirport = 6;
+    private const int ByArrivalAirport = 7;
+    private const int ByClass = 8;
+    private const int ByPassengerId = 9;
+    private const int ByDate = 10;
     private static int _inputLine;
     private string _passengerId = "";
 
@@ -33,7 +43,8 @@ internal sealed class BookingController(
                           7) Arrival Airport
                           8) Class
                           9) Passenger Id
-                          10) Log Out
+                          10) Departure Date
+                          11) Log Out
 
                           Option : 
                           """);
@@ -45,43 +56,46 @@ internal sealed class BookingController(
 
             switch (_inputLine)
             {
-                case 1:
+                case FindFlightById:
                     readString = ReadString("Enter flight id : ");
                     flights = flightController.FindFlightById(readString);
                     break;
-                case 2:
+                case ByDepartureCountry:
                     readString = ReadString("Enter departure country : ");
                     flights = flightController.FindFlightByDepartureCountry(readString, state);
                     break;
-                case 3:
+                case ByArrivalCountry:
                     readString = ReadString("Enter arrival country : ");
                     flights = flightController.FindFlightByArrivalCountry(readString, state);
                     break;
-                case 4:
+                case ByPriceLow:
                     price = ReadPrice("Enter price : "); //Price (Under a number)
                     flights = flightController.FindFlightsByPrice(0, price, state);
                     break;
-                case 5:
+                case ByPriceHight:
                     price = ReadPrice("Enter price : "); //Price (Above a number)
                     flights = flightController.FindFlightsByPrice(price, float.MaxValue, state);
                     break;
-                case 6:
+                case ByDepartureAirport:
                     readString = ReadString("Enter departure airport : ");
                     flights = flightController.FindFlightByDepartureAirport(readString, state);
                     break;
-                case 7:
+                case ByArrivalAirport:
                     readString = ReadString("Enter arrival airport : ");
                     flights = flightController.FindFlightByArrivalAirport(readString, state);
                     break;
-                case 8:
+                case ByClass:
                     readString = ReadString("Enter flight class : ");
                     flights = flightController.FindFlightByClass(readString, state);
                     break;
-                case 9:
+                case ByPassengerId:
                     _passengerId = ManagePassenger();
                     flights = flightController.FindFlights();
                     break;
-                case 10:
+                case ByDate:
+                    Menu();
+                    break;
+                case 11:
                     Menu();
                     break;
                 default:

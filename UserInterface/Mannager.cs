@@ -9,6 +9,9 @@ namespace UserInterface;
 
 internal class Mannager
 {
+    private const int FilterBookings = 1;
+    private const int UploadFlights = 2;
+    private const int LogOut = 3;
     public static IAirportService AirportService;
     private static IFlightService FlightService;
     public static IRClassFlightService RClassFlightService;
@@ -69,13 +72,13 @@ internal class Mannager
     {
         switch (option)
         {
-            case 1:
+            case FilterBookings:
                 bookingController.FilterBookings();
                 break;
-            case 2:
+            case UploadFlights:
                 //Upload Flights
                 break;
-            case 3:
+            case LogOut:
                 Utilities.Menu();
                 break;
             default:
