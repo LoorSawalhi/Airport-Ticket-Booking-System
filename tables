@@ -3,27 +3,33 @@ flight table =>
 	depature date
 	depature airport id
 	arrival airport id
+
+flight_class_relation =>
+	flight id
+	class id
+	price
 	
 	
 class =>
 	id
 	price	
-	name
+	min price
+	max price
+	max seat
 	
 airport =>
 	id
-	airport nameI
+	airport name
 	country
 	
 
 booking =>
 	flight id
+	class id
 	passenger id
 	
 passenger =>
 	id
 	name
-	age
-	country
-	bookings
+
 
