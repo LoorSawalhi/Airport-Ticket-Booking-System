@@ -49,3 +49,55 @@ CSV files are used for the data storage layer.
         - *Departure Date:*
             - Type: Date Time
             - Constraint: Required, Allowed Range (today → future)
+
+# DataBase Tables Structure
+
+```mermaid 
+   classDiagram
+    class Flight {
+        +int id
+        +date departureDate
+        +int departureAirportId
+        +int arrivalAirportId
+    }
+    
+    class Flight_Class_Relation {
+        +int flightId
+        +int classId
+        +decimal price
+    }
+    
+    class Class {
+        +int id
+        +decimal price
+        +decimal minPrice
+        +decimal maxPrice
+        +int maxSeat
+    }
+    
+    class Airport {
+        +int id
+        +string airportName
+        +string country
+    }
+    
+    class Booking {
+        +int flightId
+        +int classId
+        +int passengerId
+    }
+    
+    class Passenger {
+        +int id
+        +string name
+    }
+
+    Flight "1" -- "*" Flight_Class_Relation : "has"
+    Class "1" -- "*" Flight_Class_Relation : "has"
+    Flight_Class_Relation "1" -- "*" Booking : "booked in"
+    Passenger "1" -- "*" Booking : "booked"
+    Airport "1" -- "*" Flight : "departure"
+    Airport "1" -- "*" Flight : "arrival"
+
+```
+
