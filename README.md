@@ -64,14 +64,13 @@ CSV files are used for the data storage layer.
     class Flight_Class_Relation {
         +int flightId
         +int classId
-        +decimal price
+        +float price
     }
     
     class Class {
         +int id
-        +decimal price
-        +decimal minPrice
-        +decimal maxPrice
+        +float minPrice
+        +float maxPrice
         +int maxSeat
     }
     
